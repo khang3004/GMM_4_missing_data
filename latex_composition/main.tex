@@ -1,0 +1,56 @@
+% Use IEEE Transaction format (2-cols, standard for AI/CS papers)
+\documentclass[10pt, journal, compsoc]{IEEEtran}
+
+% Import our customized styling module
+\usepackage{setting/khang_paper}
+
+\begin{document}
+
+\title{Gaussian Mixture Model Clustering with Incomplete Data:\\
+From Paper Reproduction to A Research-Oriented Technical Report}
+
+\author{
+    KhangDS, T.Nhat Nguyen and L.Phuc Nguyen
+    \IEEEcompsocitemizethanks{\IEEEcompsocthanksitem All authors are with the Master of Data Science, University of Science, VNU-HCM, Ho Chi Minh City, Vietnam.
+        \protect\\
+        E-mail: \{25C0103580, author2, author3\}@student.hcmus.edu.vn}
+}
+
+\IEEEtitleabstractindextext{%
+    \begin{abstract}
+        This report revisits the paper ``Gaussian Mixture Model Clustering with Incomplete Data'' from a research-oriented perspective rather than a plain recap. We reconstruct the underlying probabilistic model with a consistent notation system, reformulate the method as a constrained maximum-likelihood problem over both Gaussian mixture parameters and latent missing entries, and clarify the role of the alternating expectation-maximization updates. Beyond restating the original method, we analyze why dynamic imputation can outperform two-stage pipelines, explain the closed-form missing-data update through precision-matrix block structure, discuss convergence guarantees and their limits, and identify practical weaknesses related to initialization, covariance regularization, missingness assumptions, and model selection. The final outcome is a modular \LaTeX{} report intended as a stronger technical foundation for implementation, extension, and experimental redesign.
+    \end{abstract}
+
+    \begin{IEEEkeywords}
+        Gaussian Mixture Model, Incomplete Data, Missing Data Imputation, EM Algorithm, Model-Based Clustering.
+    \end{IEEEkeywords}}
+
+\maketitle
+\IEEEdisplaynontitleabstractindextext
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+\input{sections/introduction}
+
+\section{Notation and Problem Setup}
+\input{sections/problem_setup}
+
+\section{Methodology}
+\input{sections/methodology}
+
+\section{Implementation and Reproducibility}
+\input{sections/implementation}
+
+\section{Experimental Re-Reading}
+\input{sections/experiments}
+
+\section{Critical Discussion and Extensions}
+\input{sections/discussion}
+
+\section{Conclusion}
+\input{sections/conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{bib/references}
+
+\end{document}

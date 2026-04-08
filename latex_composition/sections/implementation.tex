@@ -1,0 +1,75 @@
+This project already contains a working Python implementation in the file \texttt{src/gmm\_missing.py}, which makes it possible to connect the mathematical derivation to concrete engineering choices. That link is valuable because several numerically important details do not appear explicitly in the original paper.
+
+\subsection{Algorithm Box}
+\begin{figure}[t]
+\hrule
+\vspace{0.5em}
+\begin{algorithmic}[1]
+\Require incomplete matrix $\mat{X}^{\text{inc}}$, number of clusters $\scal{K}$, tolerance $\scal{\varepsilon}$, maximum iterations $\scal{T}_{\max}$
+\Ensure completed matrix $\mat{X}$, responsibilities $\mat{\Gamma}$, labels $\vect{\lambda}$
+\State initialize $\mat{X}$ by column-mean imputation
+\State initialize $\set*{\scal{\alpha}_k,\vect{\mu}_k,\mat{\Sigma}_k}_{k=1}^{\scal{K}}$
+\For{$\scal{t}=1,\dots,\scal{T}_{\max}$}
+    \State compute responsibilities $\scal{\gamma}_{jk}$ for all $(j,k)$
+    \State update $\scal{\alpha}_k$, $\vect{\mu}_k$, and $\mat{\Sigma}_k$
+    \For{each sample $\vect{x}_j$ with missing block $\vect{x}_{j,m}$}
+        \State update $\vect{x}_{j,m}$ by the precision-weighted closed form
+        \State keep $\vect{x}_{j,o}$ unchanged
+    \EndFor
+    \If{relative log-likelihood improvement $\le \scal{\varepsilon}$}
+    \State \textbf{break}
+    \EndIf
+\EndFor
+\State $\lambda_j \gets \argmax_k\ \scal{\gamma}_{jk}$ for each sample
+\end{algorithmic}
+\vspace{0.5em}
+\hrule
+\caption{One-stage GMM clustering with incomplete data.}
+\label{alg:gmm-missing}
+\end{figure}
+
+\subsection{Numerical Safeguards}
+The code-level implementation introduces several safeguards that a professional report should document explicitly:
+\begin{itemize}
+    \item \textbf{Mean initialization for missing values.} A simple initial completion is used only to start the alternating routine; it is not the final imputation mechanism.
+    \item \textbf{K-means parameter initialization.} Component means are initialized from K-means centers, which generally improves stability over random initialization.
+    \item \textbf{Covariance regularization.} A diagonal ridge term is added to each covariance estimate to prevent singularity when some clusters are small or nearly collinear.
+    \item \textbf{Log-domain responsibility computation.} Using log-likelihoods and a log-sum-exp normalization is more stable than evaluating Gaussian densities directly.
+    \item \textbf{Fallback for singular precision blocks.} If a block inversion fails during the update of $\vect{x}_{j,m}$, the implementation retains the current value rather than crashing.
+\end{itemize}
+
+\subsection{Mapping the Equations to the Code}
+The implementation mirrors the paper almost line by line. The E-step computes a matrix $\mat{\Gamma} \in \R^{\scal{n}\times \scal{K}}$ whose entries are the responsibilities $\scal{\gamma}_{jk}$. The parameter M-step then forms
+\[
+    \scal{N}_k = \sum_{j=1}^{\scal{n}} \scal{\gamma}_{jk},
+    \qquad
+    \vect{\mu}_k = \frac{1}{\scal{N}_k}\sum_{j=1}^{\scal{n}}\scal{\gamma}_{jk}\vect{x}_j,
+\]
+and
+\[
+    \mat{\Sigma}_k
+    =
+    \frac{1}{\scal{N}_k}
+    \sum_{j=1}^{\scal{n}}
+    \scal{\gamma}_{jk}
+    \paren*{\vect{x}_j-\vect{\mu}_k}
+    \paren*{\vect{x}_j-\vect{\mu}_k}\trans
+    + \scal{\lambda}\mat{I},
+\]
+where $\scal{\lambda}>0$ is the regularization level used in code.
+
+The data-update step then loops over samples, extracts missing and observed coordinate sets, partitions the component precision matrices accordingly, accumulates the weighted system matrix and right-hand side, and solves for $\vect{x}_{j,m}$. This is exactly the operational form of the paper's Equation (14).
+
+\subsection{Reproducibility Recommendations}
+To make the report more reproducible than the source paper, future experiments should log at least the following metadata:
+\begin{itemize}
+    \item random seed for missing-pattern generation and model initialization;
+    \item covariance regularization level and stopping tolerance;
+    \item average runtime and iteration count for each dataset and missing ratio;
+    \item failure counts due to singular updates or degenerate clusters;
+    \item sensitivity curves with respect to $\scal{K}$, initialization, and missingness severity.
+\end{itemize}
+
+\begin{remark}
+If these metadata are omitted, a method may appear empirically strong while actually depending on a narrow band of stable hyperparameter settings. That risk is especially serious for non-convex mixture models.
+\end{remark}

@@ -1,0 +1,88 @@
+We adopt a notation system that strictly distinguishes scalars, vectors, and matrices:
+\begin{itemize}
+    \item scalars use plain math symbols, for example $\scal{n}$, $\scal{d}$, $\scal{K}$, and $\scal{\alpha}_k$;
+    \item vectors use $\vect{\cdot}$, for example $\vect{x}_j \in \R^{\scal{d}}$ and $\vect{\mu}_k \in \R^{\scal{d}}$;
+    \item matrices use $\mat{\cdot}$, for example $\mat{X} \in \R^{\scal{n}\times \scal{d}}$ and $\mat{\Sigma}_k \in \R^{\scal{d}\times \scal{d}}$.
+\end{itemize}
+
+\begin{table}[t]
+    \caption{Core notation used throughout the report}
+    \label{tab:notation}
+    \centering
+    \begin{tabularx}{\linewidth}{@{}lX@{}}
+        \toprule
+        Symbol & Meaning \\
+        \midrule
+        $\mat{X} \in \R^{\scal{n}\times \scal{d}}$ & Completed data matrix whose rows are samples \\
+        $\vect{x}_j$ & The $\scal{j}$th sample vector \\
+        $\vect{x}_{j,o}, \vect{x}_{j,m}$ & Observed and missing blocks of sample $\vect{x}_j$ \\
+        $\scal{K}$ & Number of Gaussian mixture components \\
+        $\scal{\alpha}_k$ & Mixture weight of component $\scal{k}$ \\
+        $\vect{\mu}_k$ & Mean vector of component $\scal{k}$ \\
+        $\mat{\Sigma}_k$ & Covariance matrix of component $\scal{k}$ \\
+        $\scal{\gamma}_{jk}$ & Responsibility of component $\scal{k}$ for sample $\scal{j}$ \\
+        $\mathcal{O}_j, \mathcal{M}_j$ & Index sets of observed and missing coordinates \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Let the dataset be
+\[
+    \mat{X} =
+    \begin{bmatrix}
+        \vect{x}_1\trans\\
+        \vect{x}_2\trans\\
+        \vdots\\
+        \vect{x}_{\scal{n}}\trans
+    \end{bmatrix},
+    \qquad
+    \vect{x}_j \in \R^{\scal{d}}.
+\]
+For each sample $\vect{x}_j$, let $\mathcal{O}_j$ be the set of observed feature indices and $\mathcal{M}_j$ be the set of missing feature indices, with $\mathcal{O}_j \cup \mathcal{M}_j = \set{1,\dots,\scal{d}}$ and $\mathcal{O}_j \cap \mathcal{M}_j = \varnothing$. We partition the sample into
+\[
+    \vect{x}_j =
+    \begin{bmatrix}
+        \vect{x}_{j,o}\\
+        \vect{x}_{j,m}
+    \end{bmatrix},
+\]
+where $\vect{x}_{j,o}$ is fixed by observation and $\vect{x}_{j,m}$ is unknown.
+
+For a classical GMM with $\scal{K}$ components, the density of a fully observed sample is
+\[
+    p\paren*{\vect{x}_j}
+    =
+    \sum_{k=1}^{\scal{K}}
+    \scal{\alpha}_k
+    \N\paren*{\vect{x}_j \given \vect{\mu}_k, \mat{\Sigma}_k},
+\]
+where $\scal{\alpha}_k \ge 0$ and $\sum_{k=1}^{\scal{K}} \scal{\alpha}_k = 1$.
+
+The original paper reformulates incomplete-data clustering as the following constrained problem:
+\begin{equation}
+\begin{aligned}
+    &\argmax_{\mat{X},\, \set*{\scal{\alpha}_k,\vect{\mu}_k,\mat{\Sigma}_k}_{k=1}^{\scal{K}}}
+    \sum_{j=1}^{\scal{n}}
+    \log\paren*{
+        \sum_{k=1}^{\scal{K}}
+        \scal{\alpha}_k
+        \N\paren*{\vect{x}_j \given \vect{\mu}_k, \mat{\Sigma}_k}
+    } \\
+    &\text{s.t. }
+    \vect{x}_{j,o} = \vect{x}^{\,\text{obs}}_{j,o},\ \forall j.
+\end{aligned}
+\end{equation}
+
+This formulation matters conceptually. It says that the completed data matrix is not an external preprocessing artifact; it is part of the optimization landscape. That single modeling choice is what separates this method from mean imputation, zero filling, or even EM-based imputers used as standalone preprocessing~\cite{ghahramani1994em,aste2015incomplete}.
+
+The latent assignment variable $\scal{z}_j \in \set{1,\dots,\scal{K}}$ is still present as in standard GMM inference. Therefore, the problem contains two layers of hidden structure:
+\begin{itemize}
+    \item \highlight{cluster uncertainty}, represented by posterior responsibilities;
+    \item \highlight{feature uncertainty}, represented by the missing subvectors $\vect{x}_{j,m}$.
+\end{itemize}
+
+This dual latent structure is exactly why a one-shot estimator is hard to derive directly and why the paper moves to an alternating optimization scheme.
+
+\begin{remark}
+The optimization variable is the \emph{completed} matrix $\mat{X}$, not the raw incomplete matrix. This subtle distinction is what turns the method from a preprocessing pipeline into a joint estimation framework.
+\end{remark}

@@ -1,0 +1,54 @@
+The original paper evaluates the method on eight UCI datasets: Iris, AlcoholQCM, Seeds, Wine, Segment, ElectricalGrid, Avila, and Letter~\cite{zhang2021gmm}. Missing entries are generated synthetically from fully observed data at ratios from $10\%$ to $70\%$. The algorithm is compared against three static imputers, namely mean filling, zero filling, and EM filling, as well as dynamic K-means filling variants from earlier work~\cite{wang2019kmeans}.
+
+\begin{table}[t]
+    \caption{A stronger experimental protocol for a modern rewrite}
+    \label{tab:protocol}
+    \centering
+    \begin{tabularx}{\linewidth}{@{}lX@{}}
+        \toprule
+        Item & Recommendation \\
+        \midrule
+        Missingness regimes & Evaluate MCAR, MAR, and stress-test MNAR-inspired corruption \\
+        Cluster count & Report results with true $\scal{K}$ and model-selected $\scal{K}$ \\
+        Metrics & ACC, NMI, F-score, purity, runtime, iterations, failure rate \\
+        Stability & Repeat across multiple seeds and missing-pattern draws \\
+        Ablations & Initialization, covariance type, regularization, stopping tolerance \\
+        Baselines & Include both classical and modern incomplete-data clustering methods \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{What the Reported Results Actually Show}
+Across ACC, NMI, F-score, and purity, the paper consistently reports that the proposed method outperforms classical two-stage pipelines. The strongest pattern is not simply ``GMM is better than K-means.'' A more precise reading is:
+\begin{itemize}
+    \item when imputation is decoupled from clustering, the filled matrix can erase discriminative structure;
+    \item when imputation is updated in tandem with cluster assignments, the filled values become more cluster-aware;
+    \item the advantage grows as the missing ratio becomes moderate or high, where naive imputers collapse faster.
+\end{itemize}
+
+This interpretation is more informative than listing performance tables. It connects the empirical results back to the modeling decision introduced in the formulation.
+
+\subsection{Why Dynamic Imputation Helps}
+Suppose two clusters overlap in marginal feature means but differ in multivariate shape. A static imputer based on global averages or independent feature heuristics may pull incomplete samples toward a global center. In contrast, the one-stage GMM method uses posterior responsibilities and covariance structure to complete missing values in a way that remains compatible with latent cluster geometry. In that sense, the algorithm does not merely repair missingness; it \highlight{preserves separability}.
+
+\subsection{Limits of the Experimental Design}
+Even though the empirical section is convincing at first glance, several limitations should be acknowledged explicitly in a stronger report:
+\begin{itemize}
+    \item the missingness is synthetically generated from complete datasets, which primarily matches MCAR-style setups;
+    \item the number of clusters is assumed known in advance, removing an important practical difficulty;
+    \item there is no ablation on initialization, covariance regularization, or sensitivity to nearly singular clusters;
+    \item the baselines do not include more recent incomplete-data clustering methods or modern probabilistic deep approaches;
+    \item performance gains are shown, but runtime and memory tradeoffs are not analyzed with the same care.
+\end{itemize}
+
+\subsection{What a Better Reproduction Should Add}
+A stronger reproduction should go beyond reproducing aggregate scores. It should also reveal \emph{why} the method wins and \emph{when} it fails. In practical terms, the following additions would materially improve the experimental section:
+\begin{itemize}
+    \item report per-dataset runtime and iteration counts to quantify the price paid for one-stage optimization;
+    \item compare full covariance against diagonal and tied covariance variants to isolate the role of geometric flexibility;
+    \item measure imputation error together with clustering quality to see whether better clustering always aligns with better reconstruction;
+    \item examine sensitivity under class imbalance, since mixture models can behave differently when some components are weakly represented.
+\end{itemize}
+
+\subsection{A Curious Observation Worth Preserving}
+The paper notes that for some datasets, performance with moderate missingness can exceed performance on the complete data. This is counterintuitive, but not impossible. A plausible explanation is that the iterative completion step can smooth noise or attenuate outliers by pulling uncertain coordinates toward cluster-consistent regions. That does not mean missingness is beneficial in general; rather, it suggests the algorithm may implicitly act as a form of regularized denoising. This is one of the most interesting observations in the article and deserves more attention than it receives in the original presentation.

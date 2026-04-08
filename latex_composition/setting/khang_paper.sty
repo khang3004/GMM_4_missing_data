@@ -1,0 +1,165 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{setting/khang_paper}[2026/03/19 V1.0 Custom Paper Style]
+
+% -----------------------------------------------------------------------------
+% 1. CORE PACKAGES & TYPOGRAPHY
+% -----------------------------------------------------------------------------
+% \RequirePackage[utf8]{inputenc}
+% \RequirePackage{vntex}
+% @brief: Forces the compiler to use T5 encoding (Vietnamese standard)
+\RequirePackage[T5]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{mathptmx} % @note: We use 'mathptmx' (Times New Roman clone) to ensure the T5 encoding 
+% correctly maps to a font that matches the IEEE standard aesthetic.
+\RequirePackage{lmodern}           % High-quality Latin Modern fonts
+\RequirePackage{microtype}         % Enhances typography and justification
+\RequirePackage{hyperref}          % Clickable links and cross-references
+\hypersetup{
+    colorlinks=true,
+    linkcolor=DeepBlue,
+    citecolor=codeGreen,
+    urlcolor=techBlue
+}
+
+% -----------------------------------------------------------------------------
+% 2. MATHEMATICS & ALGORITHMS
+% -----------------------------------------------------------------------------
+\RequirePackage{amsmath, amssymb, mathtools} % Advanced math environments
+\RequirePackage{bm}                          % Bold math symbols
+\RequirePackage{amsthm}
+\RequirePackage[noend]{algpseudocode}
+
+% -----------------------------------------------------------------------------
+% 3. GRAPHICS & TABLES
+% -----------------------------------------------------------------------------
+\RequirePackage{graphicx}          % Image rendering
+\RequirePackage{booktabs}          % Professional tables (top/mid/bottom rules)
+\RequirePackage{multirow}          % Spanning multiple rows in tables
+\RequirePackage{array}     % Căn chỉnh cột nâng cao
+\RequirePackage{tabularx}
+% Set default path for graphics
+\graphicspath{{./figures/}}
+% 5. ---IMAGES INSERTION PACKAGES
+\RequirePackage{float}      % Fix: Để ép ảnh đứng yên một chỗ ([H])
+
+% -----------------------------------------------------------------------------
+% 4. COLOR PALETTE DEFINITIONS
+% -----------------------------------------------------------------------------
+\RequirePackage{xcolor}
+\definecolor{techBlue}{RGB}{0, 85, 150}
+\definecolor{alertRed}{RGB}{200, 30, 30}
+\definecolor{codeGreen}{RGB}{0, 150, 80}
+\definecolor{DeepBlue}{RGB}{0, 51, 102}
+
+% -----------------------------------------------------------------------------
+% 5. CUSTOM MACROS (DECORATORS & MATH ALIASES)
+% -----------------------------------------------------------------------------
+
+% @macro: \E
+% @brief: Symbol for Statistical Expectation.
+% @return: Mathbb 'E'
+\DeclareMathOperator{\E}{\mathbb{E}}
+
+% @macro: \Var
+% @brief: Symbol for Variance.
+\DeclareMathOperator{\Var}{Var}
+
+% @macro: \Cov
+% @brief: Symbol for Covariance.
+\DeclareMathOperator{\Cov}{Cov}
+
+% @macro: \rank
+% @brief: Matrix rank operator.
+\DeclareMathOperator{\rank}{rank}
+
+% @macro: \tr
+% @brief: Trace operator.
+\DeclareMathOperator{\tr}{tr}
+
+% @macro: \diag
+% @brief: Diagonal operator.
+\DeclareMathOperator{\diag}{diag}
+
+% @macro: \argmax / \argmin
+% @brief: Optimization operators with subscript support.
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% @macro: \vect
+% @brief: Formats a variable as a bold vector.
+% @param: #1 {string} The vector variable (e.g., x).
+\newcommand{\vect}[1]{\bm{#1}}
+
+% @macro: \mat
+% @brief: Formats a variable as a bold matrix.
+% @param: #1 {string} The matrix variable (e.g., X, \Sigma).
+\newcommand{\mat}[1]{\mathbf{#1}}
+
+% @macro: \scal
+% @brief: Formats a scalar variable.
+% @param: #1 {string} The scalar variable.
+\newcommand{\scal}[1]{#1}
+
+% @macro: \trans
+% @brief: Matrix/vector transpose symbol.
+\newcommand{\trans}{^\top}
+
+% @macro: \inv
+% @brief: Matrix inverse symbol.
+\newcommand{\inv}{^{-1}}
+
+% @macro: \R
+% @brief: Symbol for Real number space.
+\newcommand{\R}{\mathbb{R}}
+
+% @macro: \N
+% @brief: Symbol for Gaussian distribution.
+\newcommand{\N}{\mathcal{N}}
+
+% @macro: \Ind
+% @brief: Indicator function.
+\newcommand{\Ind}{\mathbb{I}}
+
+% @macro: \abs
+% @brief: Absolute value with auto-sizing delimiters.
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+
+% @macro: \norm
+% @brief: Norm with auto-sizing delimiters.
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+% @macro: \set
+% @brief: Set notation with auto-sizing delimiters.
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+
+% @macro: \paren / \bracket
+% @brief: Paired delimiters for compact mathematical notation.
+\DeclarePairedDelimiter{\paren}{(}{)}
+\DeclarePairedDelimiter{\bracket}{[}{]}
+
+% @macro: \given
+% @brief: Conditional bar with proper spacing.
+\newcommand{\given}{\,\middle|\,}
+
+% @macro: \highlight
+% @brief: Emphasizes crucial terminology in the text.
+% @param: #1 {string} The text to be highlighted.
+\newcommand{\highlight}[1]{\textbf{\textcolor{techBlue}{#1}}}
+
+% @macro: \todo
+% @brief: Drops a visible, inline marker for pending tasks (useful for team collab).
+% @param: #1 {string} The task description.
+\newcommand{\todo}[1]{\textcolor{alertRed}{\textbf{[TODO: #1]}}}
+
+% Import Bibliography management (using standard BibTeX for IEEE)
+% Note: You can switch to biblatex if you heavily prefer it over standard BibTeX
+\usepackage{cite}
+%\usepackage{bib/refer}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\providecommand*{\theHtable}{\thesection.\arabic{table}}
+\providecommand*{\theHfigure}{\thesection.\arabic{figure}}
+
+\endinput
