@@ -3,6 +3,7 @@ from scipy.stats import multivariate_normal
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 from scipy.special import logsumexp
+from sklearn.preprocessing import StandardScaler
 
 class GMMMissing(BaseEstimator, ClusterMixin):
     """
@@ -209,3 +210,38 @@ class GMMMissing(BaseEstimator, ClusterMixin):
         else:
             _, gamma = self._e_step(X)
         return gamma
+    def fit_scale(self, X_incomplete):
+        self.mask_ = np.isnan(X_incomplete)
+
+        # Mean impute
+        X = np.copy(X_incomplete)
+        col_means = np.nanmean(X, axis=0)
+        col_means = np.nan_to_num(col_means)
+        inds = np.where(np.isnan(X))
+        X[inds] = np.take(col_means, inds[1])
+
+        # Scale
+        self.scaler_ = StandardScaler()
+        X = self.scaler_.fit_transform(X)
+
+        # Init
+        self._initialize_parameters(X)
+        self.lower_bound_ = -np.inf
+
+        for iteration in range(self.max_iter):
+            prev_lower_bound = self.lower_bound_
+
+            # E-step
+            log_prob_norm, gamma = self._e_step(X)
+            self.lower_bound_ = log_prob_norm
+
+            if abs(self.lower_bound_ - prev_lower_bound) < self.tol:
+                break
+
+            # M-step
+            self._m_step_params(X, gamma)
+            X = self._m_step_data(X, self.mask_, gamma)
+
+        self.X_final_ = X
+        self.n_iter_ = iteration
+        return self

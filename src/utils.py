@@ -57,3 +57,26 @@ def mean_imputation(X_incomplete):
     inds = np.where(np.isnan(X_imputed))
     X_imputed[inds] = np.take(col_means, inds[1])
     return X_imputed
+
+def create_missing_data(X, missing_ratio=0.2, random_state=42):
+    """
+    Randomly sets a percentage of the data to NaN to simulate missing data.
+    
+    Returns:
+        X_incomplete (np.ndarray): Data with NaNs representing missing values.
+        mask (np.ndarray): Boolean mask where True indicates a missing value.
+    """
+    if random_state is not None:
+        np.random.seed(random_state)
+    X_true = np.copy(X)    
+    X_incomplete = np.copy(X)
+    mask = np.random.rand(*X.shape) < missing_ratio
+    
+    # Ensure no row is entirely missing
+    all_missing_rows = np.all(mask, axis=1)
+    for row_idx in np.where(all_missing_rows)[0]:
+        keep_col = np.random.randint(0, X.shape[1])
+        mask[row_idx, keep_col] = False
+        
+    X_incomplete[mask] = np.nan
+    return X_true, X_incomplete, mask
