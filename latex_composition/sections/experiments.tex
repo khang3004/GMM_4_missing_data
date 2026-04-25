@@ -28,6 +28,27 @@ Across ACC, NMI, F-score, and purity, the paper consistently reports that the pr
 
 This interpretation is more informative than listing performance tables. It connects the empirical results back to the modeling decision introduced in the formulation.
 
+\subsection{Local Reproduction on \texttt{CC GENERAL}}
+Our project extends beyond the original paper by reproducing the method on a separate real tabular dataset, \texttt{CC GENERAL}, through the notebook \texttt{GMM\_Nhat.ipynb}. This dataset contains $8950$ credit-card customers and $17$ numeric behavioral features after dropping the customer identifier. In the stored notebook run, we inject approximately $30\%$ missingness, which yields $45{,}789$ missing entries.
+
+The reproduction notebook then walks through the same logic as the paper:
+\begin{itemize}
+    \item initialize missing values by mean imputation;
+    \item standardize the completed matrix;
+    \item initialize GMM parameters with K-means;
+    \item compute responsibilities and perform one explicit EM-style update;
+    \item run the full alternating routine with \texttt{fit\_scale()}.
+\end{itemize}
+
+The recorded run converges after $199$ iterations and yields a silhouette score of $0.1489$. We do not claim that this value is intrinsically high; its importance is different. It demonstrates that the model can be trained end-to-end on a moderate-dimensional financial dataset with large injected missingness while still producing a coherent partition structure.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{notebook_exports/GMM_Nhat_cell8_out1.png}
+    \caption{Reproduction artifact from \texttt{GMM\_Nhat.ipynb}: clustered samples after dynamic imputation, with previously incomplete rows highlighted. This figure is useful because it exposes where imputed samples land in the learned geometry.}
+    \label{fig:cc-general-reproduction}
+\end{figure}
+
 \subsection{Why Dynamic Imputation Helps}
 Suppose two clusters overlap in marginal feature means but differ in multivariate shape. A static imputer based on global averages or independent feature heuristics may pull incomplete samples toward a global center. In contrast, the one-stage GMM method uses posterior responsibilities and covariance structure to complete missing values in a way that remains compatible with latent cluster geometry. In that sense, the algorithm does not merely repair missingness; it \highlight{preserves separability}.
 
@@ -49,6 +70,8 @@ A stronger reproduction should go beyond reproducing aggregate scores. It should
     \item measure imputation error together with clustering quality to see whether better clustering always aligns with better reconstruction;
     \item examine sensitivity under class imbalance, since mixture models can behave differently when some components are weakly represented.
 \end{itemize}
+
+Our current notebooks already move in that direction because they preserve intermediate outputs, convergence summaries, and visual artifacts. The next step is to convert those artifacts into a systematic experimental log rather than leaving them as notebook-only evidence.
 
 \subsection{A Curious Observation Worth Preserving}
 The paper notes that for some datasets, performance with moderate missingness can exceed performance on the complete data. This is counterintuitive, but not impossible. A plausible explanation is that the iterative completion step can smooth noise or attenuate outliers by pulling uncertain coordinates toward cluster-consistent regions. That does not mean missingness is beneficial in general; rather, it suggests the algorithm may implicitly act as a form of regularized denoising. This is one of the most interesting observations in the article and deserves more attention than it receives in the original presentation.

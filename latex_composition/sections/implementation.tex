@@ -1,5 +1,17 @@
 This project already contains a working Python implementation in the file \texttt{src/gmm\_missing.py}, which makes it possible to connect the mathematical derivation to concrete engineering choices. That link is valuable because several numerically important details do not appear explicitly in the original paper.
 
+\subsection{Project Artifacts and Notebook Roles}
+Our implementation story is no longer concentrated in one script. It is spread across a small but meaningful ecosystem:
+\begin{itemize}
+    \item \texttt{src/gmm\_missing.py}: the reusable estimator implementing the alternating GMM-imputation routine;
+    \item \texttt{notebooks/step\_by\_step\_experiment.ipynb}: a pedagogical walkthrough of one EM cycle on synthetic data;
+    \item \texttt{notebooks/GMM\_Nhat.ipynb}: a reproduction-oriented notebook on the \texttt{CC GENERAL} dataset;
+    \item \texttt{notebooks/airplane\_crashes\_gmm\_imputation.ipynb}: an application-oriented pipeline with quantitative and visual outputs;
+    \item \texttt{src/airplane\_crashes\_pipeline.py}: the support module that turns the application notebook into a reusable workflow.
+\end{itemize}
+
+This division is useful from a software-engineering perspective because each notebook serves a distinct paper objective: explanation, reproduction, and application.
+
 \subsection{Algorithm Box}
 \begin{figure}[t]
 \hrule
@@ -37,6 +49,19 @@ The code-level implementation introduces several safeguards that a professional 
     \item \textbf{Log-domain responsibility computation.} Using log-likelihoods and a log-sum-exp normalization is more stable than evaluating Gaussian densities directly.
     \item \textbf{Fallback for singular precision blocks.} If a block inversion fails during the update of $\vect{x}_{j,m}$, the implementation retains the current value rather than crashing.
 \end{itemize}
+
+\subsection{Step-by-Step Interpretability Notebook}
+The notebook \texttt{step\_by\_step\_experiment.ipynb} is important even though it currently does not store rendered outputs in the notebook file. Its role is methodological clarity. It explicitly exposes:
+\begin{itemize}
+    \item the synthetic-data generation stage with injected MCAR missingness;
+    \item the mean-imputed initialization used only to bootstrap the procedure;
+    \item the first E-step responsibility matrix $\mat{\Gamma}$;
+    \item the first parameter M-step update;
+    \item the logic behind the data M-step associated with Equation (14);
+    \item the full iterative convergence loop using \texttt{fit()}.
+\end{itemize}
+
+For the paper, this notebook justifies the implementation section as more than a code dump: it shows the algorithm as an auditable sequence of transformations.
 
 \subsection{Mapping the Equations to the Code}
 The implementation mirrors the paper almost line by line. The E-step computes a matrix $\mat{\Gamma} \in \R^{\scal{n}\times \scal{K}}$ whose entries are the responsibilities $\scal{\gamma}_{jk}$. The parameter M-step then forms
