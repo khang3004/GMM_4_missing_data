@@ -1,0 +1,48 @@
+% ========================================================================================
+% Frame 1: Correlation Analysis Results
+% ========================================================================================
+\begin{frame}{Results: Correlation Analysis}
+    \begin{columns}[T]
+        \begin{column}{0.45\textwidth}
+            \textbf{Human Correlation (Spearman):}
+
+            \vspace{0.2cm}
+            \small
+            \begin{tabular}{lccc}
+                \toprule
+                & \textbf{Dev 1} & \textbf{Dev 2} & \textbf{Dev 3} \\
+                \midrule
+                Dev 1 & 1.00 & \textcolor{blue}{0.85} & 0.73 \\
+                Dev 2 & 0.85 & 1.00 & 0.74 \\
+                Dev 3 & 0.73 & 0.74 & 1.00 \\
+                \bottomrule
+            \end{tabular}
+
+            \vspace{0.3cm}
+
+            $\rightarrow$ \keyterm{Strong agreement} (0.73--0.85)
+        \end{column}
+        \begin{column}{0.52\textwidth}
+            \textbf{LLM Correlation (top pairs):}
+
+            \vspace{0.2cm}
+            \small
+            \begin{tabular}{lc}
+                \toprule
+                \textbf{Model Pair} & \textbf{Spearman $\rho$} \\
+                \midrule
+                Claude Sonnet -- GPT-4o-mini & \textcolor{blue}{\textbf{0.82}} \\
+                Claude Sonnet -- Mistral Large & 0.81 \\
+                GPT-4o-mini -- Mistral Large & 0.77 \\
+                \midrule
+                Ministral-8b -- Claude Sonnet & \textcolor{red}{0.22} \\
+                Ministral-8b -- GPT-4o-mini & \textcolor{red}{0.18} \\
+                \bottomrule
+            \end{tabular}
+
+            \vspace{0.2cm}
+
+            $\rightarrow$ \textcolor{red}{Ministral-8b diverges significantly}
+        \end{column}
+    \end{columns}
+\end{frame}

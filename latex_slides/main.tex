@@ -1,0 +1,62 @@
+\documentclass[aspectratio=169, 11pt, xcolor=table]{beamer}
+
+\usepackage{settings/hcmus_beamer}
+\input{settings/packages}
+\input{settings/commands}
+\graphicspath{{./images/}{./figures/}{../latex_report/figures/}{../notebooks/artifacts/}}
+
+\titlegraphic{
+   \includegraphics[height=1.5cm]{hcmus_logo}
+}
+\title[\textbf{GMM with Incomplete Data}]{
+    \textbf{Gaussian Mixture Model Clustering\\with Incomplete Data}
+}
+\subtitle{From paper reproduction to a one-stage view of imputation + clustering}
+\author[HCMUS Seminar]{Khang Nguyen \and Nhat Nguyen \and Phuc Nguyen}
+\institute[HCMUS]{
+    \small Master of Data Science\\University of Science, VNU-HCM
+}
+\date{\small Seminar slides --- \today}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\color{techBlue}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{alertRed}$\bullet$}
+
+\setbeamercolor{title}{fg=white,bg=techBlue}
+\setbeamercolor{frametitle}{fg=white,bg=techBlue}
+\setbeamercolor{block title}{fg=white,bg=techBlue}
+\setbeamercolor{block body}{bg=blue!4,fg=black}
+\setbeamercolor{alerted text}{fg=alertRed}
+\setbeamercolor{palette primary}{bg=techBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=black!75,fg=white}
+\setbeamercolor{palette tertiary}{bg=black!90,fg=white}
+
+\setbeamertemplate{footline}{
+    \hbox{
+        \begin{beamercolorbox}[wd=.76\paperwidth,ht=2.6ex,dp=1.1ex,leftskip=0.6cm]{palette primary}
+            \small \insertshorttitle
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[wd=.24\paperwidth,ht=2.6ex,dp=1.1ex,rightskip=0.5cm plus1fil]{palette secondary}
+            \small \insertframenumber{} / \inserttotalframenumber
+        \end{beamercolorbox}
+    }
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+\begin{frame}{Roadmap}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\input{sections/gmm/01_hook.tex}
+\input{sections/gmm/02_formulation.tex}
+\input{sections/gmm/03_algorithm.tex}
+\input{sections/gmm/04_implementation.tex}
+\input{sections/gmm/05_results.tex}
+\input{sections/gmm/06_takeaways.tex}
+
+\end{document}

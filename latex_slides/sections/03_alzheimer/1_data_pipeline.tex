@@ -1,0 +1,157 @@
+% -----------------------------------------------------------------------------
+% File: sections/03_alzheimer/1_data_pipeline.tex
+% Description: 6-Step Pipeline (Height-Constrained to prevent overflow)
+% -----------------------------------------------------------------------------
+
+\begin{frame}{Standardized MRI Preprocessing Pipeline}
+    \centering
+
+    % --- KEY FIX: Resize based on HEIGHT, not WIDTH ---
+    % This ensures the diagram never exceeds 75% of the slide height.
+    % The width will adjust automatically to keep aspect ratio.
+    \resizebox{!}{0.75\textheight}{%
+    \begin{tikzpicture}[
+        % Compact spacing
+        node distance=0.5cm and 0.3cm,
+        font=\sffamily\tiny, % Smallest readable font
+        % --- Styles ---
+        stepbox/.style={
+            rectangle, draw=DeepBlue!80, fill=white, thick,
+            rounded corners=2pt,
+            text width=1.6cm, % Very narrow boxes
+            align=center,
+            inner sep=2pt,
+            drop shadow={opacity=0.3}
+        },
+        arrow/.style={->, >=stealth, thick, DeepBlue, rounded corners=2pt}
+    ]
+
+        % ================= ROW 1 (Left to Right) =================
+
+        % --- Step 1 ---
+        \node[stepbox] (step1) {
+            \includegraphics[width=0.9cm, height=0.9cm, keepaspectratio]{alzheimer/data_preprocessing/step1_raw} \\
+            \textbf{1. Raw}\\(ADNI)
+        };
+
+        % --- Step 2 ---
+        \node<2->[stepbox, right=of step1] (step2) {
+            \includegraphics[width=0.9cm, height=0.9cm, keepaspectratio]{alzheimer/data_preprocessing/step2_fov} \\
+            \textbf{2. FOV}\\(Crop)
+        };
+
+        % --- Step 3 ---
+        \node<3->[stepbox, right=of step2] (step3) {
+            \includegraphics[width=0.9cm, height=0.9cm, keepaspectratio]{alzheimer/data_preprocessing/step3_bet} \\
+            \textbf{3. BET}\\(Skull)
+        };
+
+        % ================= ROW 2 (Right to Left) =================
+
+        % --- Step 4 ---
+        % Ultra-tight vertical spacing
+        \node<4->[stepbox, below=0.6cm of step3] (step4) {
+            \includegraphics[width=0.9cm, height=0.9cm, keepaspectratio]{alzheimer/data_preprocessing/step4_flirt} \\
+            \textbf{4. FLIRT}\\(Linear)
+        };
+
+        % --- Step 5 ---
+        \node<5->[stepbox, left=of step4] (step5) {
+            \includegraphics[width=0.9cm, height=0.9cm, keepaspectratio]{alzheimer/data_preprocessing/step5_fnirt} \\
+            \textbf{5. FNIRT}\\(Non-Lin)
+        };
+
+        % --- Step 6 ---
+        \node<6->[stepbox, left=of step5] (step6) {
+            \includegraphics[width=0.9cm, height=0.9cm, keepaspectratio]{alzheimer/data_preprocessing/step6_roi} \\
+            \textbf{6. ROI}\\(Hippo.)
+        };
+
+        % ================= CONNECTIONS =================
+
+        \draw<2->[arrow] (step1) -- (step2);
+        \draw<3->[arrow] (step2) -- (step3);
+
+        % Tight Wrap Around
+        \draw<4->[arrow] (step3.south) -- ++(0,-0.3) -| (step4.north);
+
+        \draw<5->[arrow] (step4) -- (step5);
+        \draw<6->[arrow] (step5) -- (step6);
+
+    \end{tikzpicture}
+    } % End resizebox
+\end{frame}
+
+
+
+
+% -----------------------------------------------------------------------------
+% Description: Data Augmentation Techniques (Robustness Strategy)
+% -----------------------------------------------------------------------------
+
+\begin{frame}{Data Augmentation Strategy}
+
+    \vspace{0.2cm}
+
+    \begin{columns}
+        % --- COLUMN 1: STRATEGY (Simplified) ---
+        \begin{column}{0.42\textwidth}
+            % Dùng alertblock cho vấn đề (Problem)
+            \begin{alertblock}{The Problem: Overfitting}
+                \small
+                Small medical datasets $\rightarrow$ Model memorizes patient position/scanner noise instead of pathology.
+            \end{alertblock}
+
+            \vspace{0.4cm}
+
+            % Dùng block cho giải pháp (Solution)
+            \begin{block}{The Solution: Invariance}
+                \small
+                Force model to learn robust features invariant to:
+                \begin{itemize}
+                    \item \textbf{Position} (Translation)
+                    \item \textbf{Orientation} (Rotation)
+                    \item \textbf{Intensity} (Contrast)
+                \end{itemize}
+            \end{block}
+        \end{column}
+
+        % --- COLUMN 2: TECHNICAL SPECS (Fixed Table) ---
+        \begin{column}{0.55\textwidth}
+            \centering
+            \textbf{Online Transformations}
+            \vspace{0.2cm}
+
+            % Table settings for compactness
+            \renewcommand{\arraystretch}{1.3}
+            \setlength{\tabcolsep}{6pt}
+            \small % Giảm size chữ trong bảng
+
+            \begin{tabular}{ll}
+                \toprule
+                \textbf{Transform} & \textbf{Settings} \\
+                \midrule
+                % Flip
+                $\leftrightarrow$ Horizontal Flip & $p=0.5$ \\
+
+                % Rotation (Icon: Circular Arrow)
+                $\circlearrowright$ Rotation & $\pm 10\%$ rad (Zero-fill) \\
+
+                % Translation (Icon: UpDown Arrow)
+                $\updownarrow$ Translation & $\pm 10\%$ (Shift H/V) \\
+
+                % Zoom (Icon: Times symbol for scaling)
+                $\times$ Zoom & $\pm 10\%$ (Scale) \\
+
+                % Contrast (Icon: Simple TikZ Circle - FIXED)
+                \tikz[baseline=-0.6ex]{\draw[fill=gray] (0,0) circle (0.8ex);} Contrast & $\pm 10\%$ Intensity \\
+                \bottomrule
+            \end{tabular}
+
+            \vspace{0.3cm}
+            \begin{beamercolorbox}[sep=4pt, center, rounded=true, bg=yellow!10]{note}
+                \scriptsize \textit{*Applied on-the-fly to prevent memory overhead.}
+            \end{beamercolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}

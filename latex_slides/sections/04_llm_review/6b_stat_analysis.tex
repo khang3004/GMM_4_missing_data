@@ -1,0 +1,79 @@
+% -----------------------------------------------------------------------------
+% File: sections/04_llm_review/6b_stat_analysis.tex
+% Description: Statistical Analysis Pipeline (Fixed: Added 'align=center' to nodes)
+% -----------------------------------------------------------------------------
+
+\begin{frame}{Statistical Analysis Pipeline}
+    \centering
+    \vspace{-0.2cm}
+
+    % Define colors
+    \definecolor{Step1}{RGB}{200, 50, 50}   % Red
+    \definecolor{Step2}{RGB}{50, 150, 50}   % Green
+    \definecolor{Step3}{RGB}{50, 50, 200}   % Blue
+
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[
+        node distance=0.6cm and 0.5cm,
+        font=\sffamily\small,
+        % Styles
+        stepBox/.style={
+            rectangle, draw=black, thick, fill=white,
+            minimum width=3.5cm, minimum height=1.5cm, rounded corners=3pt,
+            align=center % <--- QUAN TRỌNG: Bắt buộc phải có để dùng \\ xuống dòng
+        },
+        mathNode/.style={
+            font=\bfseries\large
+        },
+        arrow/.style={->, >=stealth, ultra thick, gray!70}
+    ]
+
+        % --- STEP 1: NORMALITY TEST ---
+        \node[stepBox, draw=Step1, fill=red!5] (step1) {
+            \textbf{1. Normality Check} \\
+            \vspace{0.1cm}
+            \scriptsize Shapiro-Wilk Test
+        };
+        % Formula 1
+        \node[below=0.1cm of step1, text=Step1] {$p\text{-value} < \alpha \, (0.05)$};
+        \node[below=0.5cm of step1, font=\tiny\itshape] {Result: Non-normal Dist.};
+
+        % --- STEP 2: CORRELATION ---
+        \node[stepBox, right=1.2cm of step1, draw=Step2, fill=green!5] (step2) {
+            \textbf{2. Consistency} \\
+            \vspace{0.1cm}
+            \scriptsize Spearman Rank ($\rho$)
+        };
+        % Formula 2
+        \node[below=0.1cm of step2, text=Step2] {$\rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}$};
+        \node[below=0.5cm of step2, font=\tiny\itshape] {High Human Agreement};
+
+        % --- STEP 3: CONSENSUS ---
+        \node[stepBox, right=1.2cm of step2, draw=Step3, fill=blue!5] (step3) {
+            \textbf{3. Ground Truth} \\
+            \vspace{0.1cm}
+            \scriptsize Consensus Theory
+        };
+        % Formula 3
+        \node[below=0.1cm of step3, text=Step3] {$GT = \text{Median}(S_{Human})$};
+        \node[below=0.5cm of step3, font=\tiny\itshape] {Unified Human Baseline};
+
+        % --- ARROWS ---
+        \draw[arrow] (step1) -- (step2);
+        \draw[arrow] (step2) -- (step3);
+
+    \end{tikzpicture}
+    }
+
+    \vspace{0.8cm}
+
+    % --- Comparison Logic ---
+    \begin{block}{Final Comparative Metric}
+        \centering
+        \large
+        $Alignment = \text{Corr}(\, S_{LLM}, \, \text{Median}(S_{Human}) \,)$
+    \end{block}
+
+    \vspace{0.2cm}
+    \footnotesize \textit{Key Finding: Claude 3.5 Sonnet shows highest alignment ($\rho \approx 0.8$) with human consensus.}
+\end{frame}

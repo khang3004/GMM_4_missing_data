@@ -1,0 +1,45 @@
+\section{Motivation}
+
+\begin{frame}[plain,shrink=6]
+    \vspace{0.2cm}
+    {\Huge \textbf{Missing values do not just remove numbers.}}\\[0.25cm]
+    {\LARGE \textcolor{techBlue}{They bend the cluster geometry.}}
+
+    \vspace{0.35cm}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.54\textwidth}
+            \input{figures/tikz/missingness_hook.tikz}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \vspace{0.1cm}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block body}
+                \large
+                \textbf{If we impute first}\\
+                \normalsize the filled values may look plausible\\
+                \textbf{but destroy separation.}
+            \end{beamercolorbox}
+
+            \vspace{0.2cm}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+                \large
+                \textbf{Goal}\\
+                \normalsize fill the blanks in a way that helps clustering.
+            \end{beamercolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[shrink=4]{The Paper in One Sentence}
+    \begin{center}
+        \begin{beamercolorbox}[sep=0.95em, rounded=true, shadow=true, wd=0.92\textwidth, center]{title}
+            \large
+            \textbf{Do not separate imputation and clustering.}\\[0.4em]
+            \normalsize
+            Optimize them \textcolor{alertRed}{together} inside one Gaussian mixture model.
+        \end{beamercolorbox}
+    \end{center}
+
+    \vspace{0.2cm}
+    \input{figures/tikz/twostage_vs_onestage.tikz}
+\end{frame}

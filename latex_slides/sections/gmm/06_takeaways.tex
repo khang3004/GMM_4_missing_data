@@ -1,0 +1,59 @@
+\section{Takeaways}
+
+\begin{frame}[shrink=4]{Strengths, Limits, and Research Headroom}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.31\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+                \textbf{Strengths}
+            \end{beamercolorbox}
+            \begin{itemize}
+                \item one-stage objective
+                \item cluster-aware imputation
+                \item full covariance geometry
+                \item monotone ascent behavior
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.31\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{alerted text}
+                \textbf{Limits}
+            \end{beamercolorbox}
+            \begin{itemize}
+                \item local optimum only
+                \item cubic cost in dimension
+                \item sensitive to \(K\), init, regularization
+                \item assumes synthetic missingness is informative enough
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.31\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block body}
+                \textbf{Next}
+            \end{beamercolorbox}
+            \begin{itemize}
+                \item diagonal / tied / sparse covariance
+                \item automatic model selection
+                \item MAR/MNAR-aware extensions
+                \item uncertainty-preserving imputation
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[plain]
+    \begin{center}
+        \vspace{0.8cm}
+        {\Huge \textbf{Take-home message}}\\[0.7cm]
+
+        \begin{beamercolorbox}[sep=1.2em, rounded=true, shadow=true, wd=0.88\textwidth, center]{title}
+            \LARGE
+            \textbf{For incomplete-data clustering,}\\[0.2cm]
+            \textcolor{alertRed}{the best imputation is the one optimized for the clustering objective.}
+        \end{beamercolorbox}
+
+        \vspace{1.0cm}
+        {\Large Gaussian geometry + alternating optimization + precision-based reconstruction}
+
+        \vfill
+        {\Huge \textbf{Q \& A}}
+    \end{center}
+\end{frame}

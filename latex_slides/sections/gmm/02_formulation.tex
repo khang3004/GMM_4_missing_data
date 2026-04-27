@@ -1,0 +1,101 @@
+\section{Formulation}
+
+\begin{frame}[shrink=3]{Joint Optimization View}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.58\textwidth}
+            \[
+                \max_{X,\{\alpha_k,\mu_k,\Sigma_k\}_{k=1}^{K}}
+                \sum_{j=1}^{n}
+                \log\Bigg(
+                \sum_{k=1}^{K}\alpha_k \,
+                \mathcal{N}(x_j \mid \mu_k, \Sigma_k)
+                \Bigg)
+            \]
+
+            \[
+                \text{s.t. } x_{j,o}=x_{j,o}^{\mathrm{obs}},\qquad
+                x_j=\begin{bmatrix}x_{j,o}\\x_{j,m}\end{bmatrix}
+            \]
+
+            \vspace{0.25cm}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block body}
+                \large
+                \textbf{The optimization variable is the completed matrix \(X\),}\\
+                not only the GMM parameters.
+            \end{beamercolorbox}
+        \end{column}
+        \begin{column}{0.38\textwidth}
+            \begin{beamercolorbox}[sep=0.9em, rounded=true, shadow=true]{block title}
+                \textbf{Two hidden layers}
+            \end{beamercolorbox}
+            \vspace{0.15cm}
+            \begin{itemize}
+                \item \(\gamma_{jk}\): cluster uncertainty
+                \item \(x_{j,m}\): feature uncertainty
+            \end{itemize}
+
+            \vspace{0.25cm}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{alerted text}
+                \textbf{Observed entries are locked.}\\
+                Only the missing block moves.
+            \end{beamercolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[shrink=10]{The Three Equations That Matter}
+    \small
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.32\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+                \textbf{E-step}
+            \end{beamercolorbox}
+            \[
+                \gamma_{jk}=
+                \frac{\alpha_k\mathcal{N}(x_j\mid \mu_k,\Sigma_k)}
+                {\sum_{\ell=1}^{K}\alpha_{\ell}\mathcal{N}(x_j\mid \mu_{\ell},\Sigma_{\ell})}
+            \]
+            \vspace{0.1cm}
+            \centering
+            \small soft cluster membership
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+                \textbf{M-step params}
+            \end{beamercolorbox}
+            \[
+                N_k=\sum_{j=1}^{n}\gamma_{jk},\qquad
+                \alpha_k=\frac{N_k}{n}
+            \]
+            \[
+                \mu_k=\frac{1}{N_k}\sum_{j=1}^{n}\gamma_{jk}x_j
+            \]
+            \[
+                \Sigma_k=\frac{1}{N_k}\sum_{j=1}^{n}\gamma_{jk}(x_j-\mu_k)(x_j-\mu_k)^\top
+            \]
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+                \textbf{M-step data}
+            \end{beamercolorbox}
+            \[
+            \begin{aligned}
+                x_{j,m}^{\star}
+                &=
+                \left(\sum_{k=1}^{K}P_{jk}\Lambda_{k,mm}\right)^{-1} \\
+                &\quad \cdot
+                \sum_{k=1}^{K}
+                P_{jk}
+                \Big(
+                \Lambda_{k,mo}\mu_{k,o}
+                +\Lambda_{k,mm}\mu_{k,m}
+                -\Lambda_{k,mo}x_{j,o}
+                \Big)
+            \end{aligned}
+            \]
+            \centering
+            \small precision-weighted conditional reconstruction
+        \end{column}
+    \end{columns}
+\end{frame}

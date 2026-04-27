@@ -1,0 +1,63 @@
+% -----------------------------------------------------------------------------
+% Description: Custom macros acting as "Decorators" for consistent styling.
+% -----------------------------------------------------------------------------
+
+% --- Color Definitions  ---
+\definecolor{techBlue}{RGB}{0, 85, 150}
+\definecolor{alertRed}{RGB}{200, 30, 30}
+\definecolor{codeGreen}{RGB}{0, 150, 80}
+
+% --- Decorator: Text Highlighting ---
+% Usage: \highlight{important term}
+% Effect: Bold and TechBlue color
+\newcommand{\highlight}[1]{\textbf{\textcolor{techBlue}{#1}}}
+
+% --- Decorator: Todo Marker ---
+% Usage: \todo{Fix this figure}
+% Effect: Visible red marker for dev phase
+\newcommand{\todo}[1]{\textcolor{alertRed}{\textbf{[TODO: #1]}}}
+
+% --- Component: Paper Title Block ---
+% Usage: \paperHeader{Title}{Author}{Conference}
+% Description: Standardizes the header for each paper section
+\newcommand{\paperHeader}[3]{
+    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+        \usebeamerfont{title}#1\par%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\small \textit{#2}}\par%
+        {\usebeamerfont{date}\scriptsize \textbf{#3}}
+    \end{beamercolorbox}
+    \vspace{0.5cm}
+}
+%-----------------------------------------------------------------------------------------------------
+% --- Decorator: Highlighting Key Terms ---
+% @param #1: The text to highlight
+% Usage: \keyterm{YOLOv11}, \keyterm{GCLI Module}
+\newcommand{\keyterm}[1]{\textbf{\textcolor{brown}{#1}}}
+
+% --- Decorator: Paper Citation Header ---
+% Description: Creates a standardized header box for introducing a new paper.
+% @param #1: Paper Title
+% @param #2: Authors
+% @param #3: Conference/Year
+\newcommand{\paperCard}[3]{
+    \begin{beamercolorbox}[sep=0.5em, wd=\textwidth, shadow=true, rounded=true, center]{title}
+        \usebeamerfont{frametitle} #1 \par
+        \vspace{0.3em}
+        \usebeamerfont{subtitle} \scriptsize \textit{#2} \hfill \textbf{#3}
+    \end{beamercolorbox}
+    \vspace{1em}
+}
+
+% --- Decorator: Result Metric Box ---
+% Description: A small box to highlight accuracy/F1-score results.
+% @param #1: Label (e.g., Accuracy)
+% @param #2: Value (e.g., 98.5%)
+\newcommand{\resultBox}[2]{
+    \begin{beamercolorbox}[colsep*=1ex, rounded=true, shadow=false, center]{block title}
+        \small #1 \\
+        \LARGE \textbf{#2}
+    \end{beamercolorbox}
+}
+% --- FIX: Define Color locally to avoid "Undefined color" error ---
+\definecolor{DeepBlue}{RGB}{0, 51, 102}

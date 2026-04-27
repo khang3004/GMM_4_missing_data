@@ -1,0 +1,34 @@
+% ========================================================================================
+% Frame 7: LLM vs Human Performance
+% ========================================================================================
+\begin{frame}[small]{Results: LLM vs Human Performance}
+    \begin{table}
+        \centering
+        \footnotesize
+        \begin{tabular}{l|cccccc|cccccc}
+            \toprule
+            \textbf{Model} & \textbf{m1} & \textbf{m2} & \textbf{m3} & \textbf{m4} & \textbf{m5} & \textbf{m6} & \textbf{m7} & \textbf{m8} & \textbf{m9} & \textbf{m10} & \textbf{m11} & \textbf{m12} \\
+            \midrule
+            \rowcolor{blue!10}
+            \textbf{Claude Sonnet} & \textbf{0.71} & \textbf{0.83} & \textbf{0.71} & \textbf{0.90} & \textbf{0.85} & \textbf{0.88} & 0.80 & \textbf{0.79} & 0.73 & \textbf{0.87} & 0.76 & \textbf{0.86} \\
+            GPT-4o-mini & 0.64 & 0.58 & 0.66 & 0.81 & 0.76 & 0.74 & 0.72 & 0.65 & 0.66 & 0.79 & 0.75 & 0.78 \\
+            Mistral Large & 0.57 & 0.54 & 0.60 & 0.76 & 0.79 & 0.69 & \textbf{0.81} & 0.73 & \textbf{0.73} & 0.87 & \textbf{0.77} & 0.85 \\
+            Claude Haiku & 0.62 & 0.50 & 0.65 & 0.44 & 0.66 & 0.28 & 0.70 & 0.77 & 0.53 & 0.78 & 0.70 & 0.71 \\
+            Ministral-8b & 0.43 & 0.30 & 0.48 & 0.28 & 0.59 & 0.17 & 0.59 & 0.57 & 0.58 & 0.59 & 0.69 & 0.63 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \vspace{0.2cm}
+
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \textbf{Key Finding:} Claude Sonnet achieved highest correlation in \textbf{9/12 metrics}, especially ISP (0.90), LSP (0.88), SRP (0.86)
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{alertblock}{Observation}
+                LLMs assign \keyterm{higher scores} than humans on LSP, DIP, ISP
+            \end{alertblock}
+        \end{column}
+    \end{columns}
+\end{frame}

@@ -1,0 +1,39 @@
+% -----------------------------------------------------------------------------
+% Module Controller: Leukemia Detection (Paper 1)
+% Role: Orchestrates the flow of the YOLOv11 presentation.
+% -----------------------------------------------------------------------------
+
+% 1. Define the Section (Top-level container)
+% Note: Defining it here makes the module self-contained.
+\section{Leukemia Detection (YOLOv11)}
+
+% 2. Section Cover Slide
+% Transition slide to wake up the audience
+\begin{frame}[plain, c]
+    \centering
+    \Huge \textcolor{blue}{\textbf{Paper 01}} \\
+    \vspace{0.5cm}
+    \paperCard{Leukemia Detection Based on YOLOv11 with GCLI}
+              {Minh Tai Pham Nguyen et al.}
+              {ICCCI 2025}
+
+\end{frame}
+
+% 3. The logical flow (Importing sub-components)
+% Use \input here because this file is already \include-d in main.tex
+% (LaTeX does not allow nested \include)
+
+% -> Introduction & Problem Statement
+\subsection{Introduction \& Problem Statement}
+\input{sections/02_leukemia/1_problem}
+
+
+% -> The Core Tech: GCLI Module (Most important part)
+\subsection{GCLI Module}
+\input{sections/02_leukemia/2_gcli}
+\input{sections/02_leukemia/2_gcli_architecture}
+\input{sections/02_leukemia/2_method_gcli}
+
+% -> Experiments & Benchmarks
+\subsection{Experiments \& Benchmarks}
+\input{sections/02_leukemia/3_experiments}

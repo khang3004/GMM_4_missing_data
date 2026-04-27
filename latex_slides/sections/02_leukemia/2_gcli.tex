@@ -1,0 +1,79 @@
+% -----------------------------------------------------------------------------
+% File: sections/05_leukemia/1_gcli_concept.tex
+% Description: Conceptual Overview of GCLI Module
+% -----------------------------------------------------------------------------
+
+\begin{frame}{The GCLI Solution: Global Context \& Local Interaction}
+    \centering
+    \vspace{-0.2cm}
+
+    % Define colors locally for safety
+    \definecolor{TechBlue}{RGB}{0, 102, 204}
+    \definecolor{TechRed}{RGB}{204, 0, 0}
+    \definecolor{TechGreen}{RGB}{0, 153, 76}
+
+    \begin{columns}[T]
+        % --- Left: The Problem (C2PSA Limitations) ---
+        \begin{column}{0.48\textwidth}
+            \begin{alertblock}{The Bottleneck: C2PSA (Self-Attention)}
+                \centering
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{Heavy Computation:} Quadratic complexity ($O(N^2)$).
+                    \item \textbf{Redundancy:} Processes \textit{all} channels, including noise.
+                    \item \textbf{Lack of Interaction:} Local & Global features don't "talk" enough.
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+
+        % --- Right: The Solution (GCLI) ---
+        \begin{column}{0.48\textwidth}
+            \begin{block}{The Upgrade: GCLI Module}
+                \centering
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{Partial Utilization:} Learns only $C/2$ channels (Lightweight).
+                    \item \textbf{No Dim Reduction:} Uses \textbf{1D Conv} instead of MLP.
+                    \item \textbf{Dual Scope:} Captures Long-range dependencies + Local details.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.5cm}
+
+    % --- Visual Abstract Concept ---
+    \resizebox{0.9\textwidth}{!}{%
+    \begin{tikzpicture}[
+        font=\sffamily\small,
+        node distance=1.5cm,
+        box/.style={
+            rectangle, draw=TechBlue, fill=blue!5, thick,
+            minimum width=2.5cm, minimum height=1.2cm, rounded corners
+        },
+        arrow/.style={->, >=stealth, thick, TechBlue}
+    ]
+        % Input
+        \node[box, fill=gray!10, draw=gray] (input) {Input Features ($C$)};
+
+        % Split Strategy
+        \node[right=1.5cm of input, align=center] (split) {\textbf{Split Strategy}};
+
+        % Branches
+        \node[box, above right=0.2cm and 1cm of split, draw=gray, dashed] (b1) {Frozen ($C/2$)};
+        \node[box, below right=0.2cm and 1cm of split, draw=TechRed, fill=red!5] (b2) {\textbf{Learnable} ($C/2$)};
+
+        % Annotation
+        \node[right=0.5cm of b2, align=left, font=\footnotesize, text=TechRed] {
+            $\leftarrow$ Focus here!\\
+            (Noise reduction)
+        };
+
+        % Connections
+        \draw[arrow] (input) -- (split);
+        \draw[arrow] (split) |- (b1);
+        \draw[arrow] (split) |- (b2);
+
+    \end{tikzpicture}
+    }
+\end{frame}

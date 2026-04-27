@@ -1,0 +1,103 @@
+% -----------------------------------------------------------------------------
+% File: sections/06_llm_review/1_methodology_flow.tex
+% Description: Parallel Evaluation Methodology (Human vs. LLM)
+% -----------------------------------------------------------------------------
+
+\begin{frame}{Methodology: Parallel Evaluation Framework}
+    \centering
+    \vspace{-0.2cm}
+
+    % Define colors
+    \definecolor{HumanColor}{RGB}{0, 102, 204}   % Blue
+    \definecolor{LLMColor}{RGB}{204, 102, 0}     % Orange
+    \definecolor{DataColor}{RGB}{0, 153, 76}     % Green
+
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[
+        node distance=0.5cm and 1.0cm,
+        font=\sffamily\small,
+        % Styles
+        corpus/.style={
+            rectangle, draw=DataColor, fill=green!5, thick,
+            minimum width=2.5cm, minimum height=1.2cm, align=center, rounded corners
+        },
+        actor/.style={
+            rectangle, draw=black, thick, fill=white,
+            minimum width=3cm, minimum height=1.0cm, align=center, drop shadow
+        },
+        process/.style={
+            rectangle, draw=gray, dashed, fill=gray!5,
+            minimum width=2.5cm, minimum height=0.8cm, align=center, font=\footnotesize
+        },
+        metric/.style={
+            circle, draw=black, fill=yellow!10, thick, inner sep=2pt, minimum size=0.8cm
+        },
+        arrow/.style={->, >=stealth, ultra thick, gray!80, rounded corners=5pt}
+    ]
+
+        % 1. INPUT CORPUS
+        \node[corpus] (input) {
+            \textbf{Code Corpus ($F$)} \\
+            $N=75$ files \\
+            \scriptsize (Java, Py, C\#, JS)
+        };
+
+        % 2. SPLIT & ACTORS
+        % Human Branch (Top)
+        \node[actor, above right=0.5cm and 2.0cm of input, draw=HumanColor, fill=blue!5] (human) {
+            \textbf{Human Experts} \\
+            \scriptsize ($n=3$ Seniors)
+        };
+
+        % LLM Branch (Bottom)
+        \node[actor, below right=0.5cm and 2.0cm of input, draw=LLMColor, fill=orange!5] (llm) {
+            \textbf{LLM Agents} \\
+            \scriptsize (GPT-4o, Claude 3, Mistral)
+        };
+
+        % 3. INTERFACE / PROMPT
+        \node[process, right=0.8cm of human] (platform) {Custom Platform};
+        \node[process, right=0.8cm of llm] (prompt) {Structured Prompts};
+
+        % 4. METRICS (The Core Math)
+        \coordinate (midpoint) at ($(platform)!0.5!(prompt)$);
+        \node[metric, right=2.0cm of midpoint, align=center] (metrics) {$\vec{m}$};
+        \node[below=0.1cm of metrics, font=\scriptsize, align=center] {12 Metrics\\($m_1 \dots m_{12}$)};
+
+        % 5. OUTPUT SCORES
+        \node[corpus, right=1.5cm of metrics, fill=gray!10, draw=black] (output) {
+            \textbf{Score Matrices} \\
+            $S_{Human} \text{ vs } S_{LLM}$
+        };
+
+        % --- WIRING ---
+        % Input to Actors
+        \draw[arrow] (input.east) -- ++(0.5,0) |- (human.west);
+        \draw[arrow] (input.east) -- ++(0.5,0) |- (llm.west);
+
+        % Actors to Process
+        \draw[arrow] (human) -- (platform);
+        \draw[arrow] (llm) -- (prompt);
+
+        % Process to Metrics
+        \draw[arrow] (platform.east) -- ++(0.5,0) |- (metrics.west);
+        \draw[arrow] (prompt.east) -- ++(0.5,0) |- (metrics.west);
+
+        % Metrics to Output
+        \draw[arrow] (metrics) -- (output);
+
+        % Labels
+        \node[above=0.1cm of metrics, font=\bfseries\tiny] {Standardized};
+
+    \end{tikzpicture}
+    }
+
+    \vspace{0.4cm}
+
+    % --- Math Definition Box ---
+    \begin{beamercolorbox}[sep=5pt, center, rounded=true, shadow=false, bg=gray!10]{math}
+        \footnotesize
+        \textbf{Evaluation Function:}
+        $S(f_i) = \{ m_j(f_i) \mid j \in 1..12, \text{score} \in [1, 10] \}$
+    \end{beamercolorbox}
+\end{frame}

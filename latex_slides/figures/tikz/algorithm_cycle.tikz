@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+    scale=0.92,
+    transform shape,
+    node distance=1.2cm,
+    stage/.style={rounded corners=10pt, draw=black!75, line width=1pt, minimum width=3.6cm, minimum height=1.2cm, align=center, font=\small\bfseries, inner sep=6pt},
+    arrow/.style={-{Latex[length=3mm]}, line width=1.3pt}
+]
+    \node[stage, fill=orange!20] (init) at (0,0) {1. mean-fill init\\+ KMeans centers};
+    \node[stage, fill=blue!14] (estep) at (4.8,0) {2. E-step\\compute $\gamma_{jk}$};
+    \node[stage, fill=green!16] (mparam) at (4.8,-2.35) {3. parameter M-step\\update $\alpha_k,\mu_k,\Sigma_k$};
+    \node[stage, fill=red!12] (mdata) at (0,-2.35) {4. data M-step\\update missing block $x_{j,m}$};
+
+    \draw[arrow] (init) -- (estep);
+    \draw[arrow] (estep) -- (mparam);
+    \draw[arrow] (mparam) -- (mdata);
+    \draw[arrow] (mdata) -- (init);
+
+    \node[rounded corners=8pt, draw=black!70, dashed, line width=0.9pt, fit=(estep)(mparam)(mdata), inner sep=12pt] {};
+    \node[font=\bfseries] at (2.4,-3.55) {repeat until log-likelihood gain $< \tau$};
+\end{tikzpicture}

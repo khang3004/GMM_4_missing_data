@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+    scale=0.88,
+    transform shape,
+    node distance=0.55cm and 0.8cm,
+    file/.style={rounded corners=8pt, draw=black!75, line width=0.9pt, minimum width=3.8cm, minimum height=0.95cm, align=left, font=\scriptsize, inner sep=6pt},
+    arrow/.style={-{Latex[length=3mm]}, line width=1.15pt}
+]
+    \node[file, fill=blue!10] (core) at (0,0) {\texttt{src/gmm\_missing.py}\\alternating estimator};
+    \node[file, fill=green!12, below=of core] (exp1) {\texttt{notebooks/step\_by\_step\_experiment.ipynb}\\single-cycle explanation};
+    \node[file, fill=orange!17, below=of exp1] (exp2) {\texttt{notebooks/GMM\_Nhat.ipynb}\\CC GENERAL reproduction};
+    \node[file, fill=red!10, below=of exp2] (exp3) {\texttt{src/airplane\_crashes\_pipeline.py}\\real-data workflow};
+    \node[file, fill=gray!10, right=1.6cm of exp2, minimum width=3.4cm, minimum height=4.8cm, align=center] (report) {report \& slides\\[0.2em]
+    formulas\\figures\\artifacts\\discussion};
+
+    \draw[arrow] (core) -- (report);
+    \draw[arrow] (exp1.east) -- (report.west);
+    \draw[arrow] (exp2.east) -- (report.west);
+    \draw[arrow] (exp3.east) -- (report.west);
+\end{tikzpicture}

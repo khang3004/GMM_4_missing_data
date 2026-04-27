@@ -1,0 +1,31 @@
+% -----------------------------------------------------------------------------
+% File: settings/packages.tex
+% Description: Centralized package imports to keep main.tex clean.
+% -----------------------------------------------------------------------------
+
+% --- Visualization ---
+\usepackage{tikz}      % For drawing architectures (GCLI, VGG16)
+\usetikzlibrary{external}
+%\tikzexternalize[prefix=figures/cache/] % Cache images to speed up re-compilation
+\usepackage{pgfplots}  % For plotting results charts
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{shapes, shapes.geometric, arrows, arrows.meta, positioning, fit, calc, shadows, backgrounds, matrix, decorations.pathreplacing}
+
+% --- Layout & Formatting ---
+\usepackage{booktabs}  % Professional tables (as seen in papers)
+\usepackage{colortbl}  % Table row coloring
+\usepackage{caption}
+\usepackage{subcaption} % For side-by-side figures (e.g., MRI comparison)
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{bm}
+
+% -----------------------------------------------------------------------------
+% Graphics Configuration
+% -----------------------------------------------------------------------------
+\usepackage{graphicx}
+
+% --- Optimize Image Paths (Multi-path configuration) ---
+% LaTeX will search for images in these folders sequentially.
+% Rule: Keep the trailing slash "/" at the end of each path!
+%\graphicspath{ {./images/} }

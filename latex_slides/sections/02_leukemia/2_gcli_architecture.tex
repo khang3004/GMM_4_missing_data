@@ -1,0 +1,111 @@
+% -----------------------------------------------------------------------------
+% File: sections/02_leukemia/2_gcli_architecture.tex
+% Description: Horizontal Flowchart of GCLI Architecture (Fixed Layer Error)
+% -----------------------------------------------------------------------------
+
+% --- FIX: Declare layers locally if not in main preamble ---
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+\begin{frame}{GCLI Architecture: Inside the Black Box}
+    \centering
+    \vspace{-0.2cm}
+
+    % Define colors
+    \definecolor{ProcYellow}{RGB}{255, 240, 200}
+    \definecolor{ProcRed}{RGB}{255, 220, 220}
+    \definecolor{TechBlue}{RGB}{0, 80, 180}
+
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[
+        node distance=0.4cm and 0.8cm,
+        font=\sffamily\footnotesize,
+        % Styles
+        tensor/.style={
+            rectangle, draw=black, fill=white, thick,
+            minimum height=0.6cm, minimum width=1.2cm, align=center, font=\scriptsize
+        },
+        op/.style={
+            circle, draw=black, thick, fill=white, inner sep=1pt, minimum size=0.6cm
+        },
+        block/.style={
+            rectangle, draw=black, thick, fill=gray!10, rounded corners=2pt,
+            minimum height=0.8cm, minimum width=1.8cm, align=center
+        },
+        groupbox/.style={
+            rectangle, draw=gray, dashed, inner sep=0.3cm, rounded corners=5pt
+        },
+        arrow/.style={->, >=stealth, thick, TechBlue, rounded corners=3pt}
+    ]
+
+        % 1. INPUT & SPLIT
+        \node[tensor, fill=green!10] (input) {Input\\$W \times H \times C$};
+
+        % Split point
+        \coordinate[right=0.8cm of input] (split);
+
+        % Upper Branch (Identity / Frozen Part)
+        \node[tensor, above right=1.5cm and 1.0cm of split, fill=gray!10] (part1) {Part 1\\$C/2$};
+
+        % Lower Branch (The Active GCLI Part)
+        \coordinate[below right=1.5cm and 0.5cm of split] (part2_start);
+
+        % --- SUB-MODULE 1: GLOBAL CONTEXT (Red Zone) ---
+        \node[block, right=0.5cm of split, fill=ProcRed, yshift=-0.5cm] (conv2d) {Conv2D\\$1\times1$};
+        \node[block, right=0.5cm of conv2d, fill=ProcRed] (softmax) {Softmax};
+        \node[op, below=0.4cm of softmax] (mul1) {$\times$};
+
+        % Wiring for Global Context
+        \draw[arrow] (split) -- ++(0.2, -0.5) |- (conv2d.west);
+        \draw[arrow] (conv2d) -- (softmax);
+        \draw[arrow] (softmax) -- (mul1);
+        \draw[arrow] (split) -- ++(0.2, -0.5) |- (mul1.west); % Skip connection input to mul
+
+        % --- SUB-MODULE 2: CHANNEL WEIGHT (Yellow Zone) ---
+        % This comes AFTER the Global Context interaction
+        \node[tensor, right=0.8cm of mul1] (pools) {GAP + GMP\\(Dual Pool)};
+
+        % 1D Convolutions Pipeline (Horizontal)
+        \node[block, right=0.5cm of pools, fill=ProcYellow] (conv1d_7) {Conv1D\\$7\times7$};
+        \node[block, right=0.3cm of conv1d_7, fill=ProcYellow] (silu) {SiLU};
+        \node[block, right=0.3cm of silu, fill=ProcYellow] (conv1d_3) {Conv1D\\$3\times3$};
+        \node[block, right=0.3cm of conv1d_3, fill=blue!10] (sigmoid) {$\sigma(\cdot)$};
+
+        % Connections
+        \draw[arrow] (mul1) -- (pools);
+        \draw[arrow] (pools) -- (conv1d_7);
+        \draw[arrow] (conv1d_7) -- (silu);
+        \draw[arrow] (silu) -- (conv1d_3);
+        \draw[arrow] (conv1d_3) -- (sigmoid);
+
+        % --- FUSION ---
+        \node[op, right=0.5cm of sigmoid] (mul2) {$\times$};
+        \node[tensor, right=0.5cm of mul2, fill=purple!10] (concat) {Concat};
+        \node[tensor, right=0.5cm of concat] (output) {Output\\$W \times H \times C$};
+
+        % Wiring Fusion
+        % Original Part 2 (Residual) to Mul2
+        \draw[arrow] (split) -- ++(0.2, -0.5) -- ++(0, -2.5) -| (mul2.south);
+        \draw[arrow] (sigmoid) -- (mul2);
+
+        % Merge Part 1 and Modulated Part 2
+        \draw[arrow] (part1.east) -| (concat.north);
+        \draw[arrow] (mul2) -- (concat);
+        \draw[arrow] (concat) -- (output);
+
+        % --- LABELS & GROUPING (Fixed Layer) ---
+        \begin{pgfonlayer}{background}
+            \node[groupbox, fit=(conv2d) (softmax) (mul1), fill=red!5, label={[red]north:\scriptsize Global Context Modeling}] {};
+            \node[groupbox, fit=(pools) (conv1d_7) (sigmoid), fill=yellow!5, label={[orange]south:\scriptsize Local Interaction (No Dim Reduction)}] {};
+        \end{pgfonlayer}
+
+        % Input wiring fix
+        \draw[arrow] (input) -- (split);
+        \draw[arrow] (split) |- (part1);
+
+    \end{tikzpicture}
+    }
+
+    \vspace{0.2cm}
+    \footnotesize \textit{\textbf{Key Innovation:} 1D Conv ($7\times7 \to 3\times3$) replaces MLP to preserve channel dimensionality.}
+\end{frame}

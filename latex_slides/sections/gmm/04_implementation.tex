@@ -1,0 +1,51 @@
+\section{Implementation}
+
+\begin{frame}[shrink=7]{How the Repository Mirrors the Math}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.56\textwidth}
+            \input{figures/tikz/repo_pipeline.tikz}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+                \textbf{Core file}
+            \end{beamercolorbox}
+            \vspace{0.15cm}
+            \texttt{src/gmm\_missing.py}
+
+            \vspace{0.25cm}
+            \small
+            \begin{beamercolorbox}[sep=0.65em, rounded=true, shadow=true]{block body}
+                \textbf{Numerical safeguards}
+                \begin{itemize}
+                    \item mean fill only for initialization
+                    \item KMeans initialization
+                    \item covariance ridge regularization
+                    \item log-sum-exp in E-step
+                    \item fallback when precision blocks are singular
+                \end{itemize}
+            \end{beamercolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[shrink=4]{Code-to-Equation Mapping}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.45}
+    \begin{tabular}{>{\bfseries}p{0.2\textwidth} p{0.33\textwidth} p{0.38\textwidth}}
+        Equation block & Meaning & In code \\
+        \toprule
+        \(\gamma_{jk}\) & posterior responsibilities & \texttt{\_e\_step()} with log-domain Gaussian scores \\
+        \(\alpha_k,\mu_k,\Sigma_k\) & standard GMM M-step & \texttt{\_m\_step\_params()} \\
+        \(x_{j,m}^{\star}\) & precision-weighted update for missing entries & \texttt{\_m\_step\_data()} \\
+        fit loop & alternating ascent until tolerance & \texttt{fit()} / \texttt{fit\_scale()} \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.45cm}
+    \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{title}
+        \large
+        The implementation is not a black box.\\
+        \textbf{The paper equations are visible almost line by line.}
+    \end{beamercolorbox}
+\end{frame}

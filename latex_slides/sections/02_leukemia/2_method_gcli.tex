@@ -1,0 +1,49 @@
+% ============================================
+% SLIDE 5: GCLI in YOLO's Architecture (1)
+% ============================================
+\begin{frame}{II. GCLI in YOLO's Architecture}
+    \begin{columns}[T]
+        \begin{column}{0.45\textwidth}
+            % IMAGE: GCLI module architecture
+            \begin{center}
+                \includegraphics[width=0.9\textwidth, keepaspectratio]{images/leukemia/GCLI_module_architecture_diagram}
+            \end{center}
+        \end{column}
+        \begin{column}{0.52\textwidth}
+            The \textbf{GCLI module} is capable of generating attention weights while preserving the original number of channels throughout the processing pipeline, thereby \textbf{avoiding dimensionality reduction}.
+            
+            \vspace{0.4cm}
+            
+            As a result, it effectively:
+            \begin{itemize}
+                \item Mitigates information loss
+                \item Preserves informative global features for channel-wise weight generation
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ============================================
+% SLIDE 6: GCLI in YOLO's Architecture (2)
+% ============================================
+\begin{frame}{II. GCLI in YOLO's Architecture}
+    \begin{columns}[T]
+        \begin{column}{0.45\textwidth}
+            % IMAGE: YOLO architecture with GCLI placement
+            \begin{center}
+                \includegraphics[width=\textwidth, height=0.95\textwidth, keepaspectratio]{images/leukemia/YOLO_architecture_with_GCLI_placement}
+            \end{center}
+        \end{column}
+        \begin{column}{0.52\textwidth}
+            \textbf{GCLI is inserted after SPPF} to leverage global context on semantically rich features.
+            
+            \vspace{0.4cm}
+            
+            \textbf{Placing GCLI before the Neck} allows attention-enhanced features to be effectively propagated across multi-scale feature maps, improving detection of cells at different scales.
+            
+            \vspace{0.4cm}
+            
+            This design achieves a \textbf{good trade-off} between detection performance and computational cost (Params, FLOPs).
+        \end{column}
+    \end{columns}
+\end{frame}

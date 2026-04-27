@@ -1,0 +1,51 @@
+% ========================================================================================
+% Frame 8: Cost Analysis
+% ========================================================================================
+\begin{frame}{Cost Analysis}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \textbf{API Costs (75 files):}
+
+            \vspace{0.3cm}
+
+            \small
+            \begin{tabular}{lrc}
+                \toprule
+                \textbf{Model} & \textbf{Cost} & \textbf{Ratio} \\
+                \midrule
+                Claude 3.5 Sonnet & \$8.52 & 31.6x \\
+                Claude 3.5 Haiku & \$1.66 & 6.1x \\
+                \rowcolor{blue!10}
+                \textbf{GPT-4o-mini} & \textbf{\$0.27} & \textbf{1x} \\
+                Mistral Large & --- & --- \\
+                \midrule
+                Human (1-2 days) & \$200--400+ & 740--1480x \\
+                \bottomrule
+            \end{tabular}
+
+            \vspace{0.3cm}
+
+            \textit{*Open-source: no API cost but infrastructure needed}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \begin{block}{Best Value}
+                \textbf{GPT-4o-mini}
+                \begin{itemize}
+                    \item Good correlation with human
+                    \item Lowest cost
+                    \item Suitable for production
+                \end{itemize}
+            \end{block}
+
+            \vspace{0.2cm}
+
+            \begin{alertblock}{Trade-offs}
+                \begin{itemize}
+                    \item Performance vs Cost
+                    \item Data Privacy
+                    \item API vs On-premise
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+    \end{columns}
+\end{frame}

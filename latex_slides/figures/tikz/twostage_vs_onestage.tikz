@@ -1,0 +1,24 @@
+\begin{tikzpicture}[
+    scale=0.88,
+    transform shape,
+    node distance=0.35cm and 0.45cm,
+    box/.style={rounded corners=8pt, draw=black!70, line width=0.9pt, minimum height=1.0cm, align=center, font=\small, inner sep=6pt},
+    arrow/.style={-{Latex[length=3mm]}, line width=1.2pt}
+]
+    \node[font=\Large\bfseries] at (2.5,3.3) {Two-stage};
+    \node[box, fill=gray!10, minimum width=2.8cm] (a1) at (1.2,2.2) {Incomplete\\data};
+    \node[box, fill=orange!18, minimum width=2.8cm, right=1.0cm of a1] (a2) {Static\\imputation};
+    \node[box, fill=gray!10, minimum width=2.8cm, right=1.0cm of a2] (a3) {GMM\\clustering};
+    \draw[arrow] (a1) -- (a2);
+    \draw[arrow] (a2) -- (a3);
+    \node[align=center, text=alertRed, font=\bfseries\small] at (4.35,1.0) {imputation never sees\\the clustering objective};
+
+    \node[font=\Large\bfseries] at (11.0,3.3) {One-stage};
+    \node[box, fill=gray!10, minimum width=2.8cm] (b1) at (9.4,2.2) {Incomplete\\data};
+    \node[box, fill=blue!12, minimum width=3.5cm, right=1.15cm of b1] (b2) {GMM parameters\\$\alpha_k,\mu_k,\Sigma_k$};
+    \node[box, fill=red!10, minimum width=3.4cm, below=0.95cm of b2] (b3) {Missing entries\\$x_{j,m}$};
+    \draw[arrow] (b1) -- (b2);
+    \draw[arrow] (b2) -- (b3);
+    \draw[arrow] (b3.west) .. controls +(180:1.3cm) and +(0:1.3cm) .. (b2.south);
+    \node[align=center, text=techBlue, font=\bfseries\small] at (11.2,0.7) {imputation and clustering\\improve each other};
+\end{tikzpicture}
