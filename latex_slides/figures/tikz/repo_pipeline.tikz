@@ -9,11 +9,11 @@
     \node[file, fill=green!12, below=of core] (exp1) {\texttt{notebooks/step\_by\_step\_experiment.ipynb}\\single-cycle explanation};
     \node[file, fill=orange!17, below=of exp1] (exp2) {\texttt{notebooks/GMM\_Nhat.ipynb}\\CC GENERAL reproduction};
     \node[file, fill=red!10, below=of exp2] (exp3) {\texttt{src/airplane\_crashes\_pipeline.py}\\real-data workflow};
-    \node[file, fill=gray!10, right=1.6cm of exp2, minimum width=3.4cm, minimum height=4.8cm, align=center] (report) {report \& slides\\[0.2em]
+    \node[file, fill=gray!10, right=2.35cm of exp2, minimum width=3.4cm, minimum height=4.8cm, align=center] (report) {report \& slides\\[0.2em]
     formulas\\figures\\artifacts\\discussion};
 
-    \draw[arrow] (core) -- (report);
-    \draw[arrow] (exp1.east) -- (report.west);
+    \draw[arrow] (core.east) .. controls +(1.8,0) and +(-1.6,1.55) .. ([yshift=1.15cm]report.west);
+    \draw[arrow] (exp1.east) .. controls +(1.4,0) and +(-1.4,0.45) .. ([yshift=0.38cm]report.west);
     \draw[arrow] (exp2.east) -- (report.west);
-    \draw[arrow] (exp3.east) -- (report.west);
+    \draw[arrow] (exp3.east) .. controls +(1.4,0) and +(-1.4,-0.45) .. ([yshift=-0.38cm]report.west);
 \end{tikzpicture}

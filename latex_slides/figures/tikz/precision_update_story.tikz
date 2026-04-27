@@ -16,13 +16,13 @@
     \sum_k P_{jk}b_{jk}
     $};
 
-    \node[comp, fill=red!10, minimum width=2.8cm] (out) at (11.5,1.0) {new missing block\\$\bm{x}_{j,m}^{\star}$};
+    \node[comp, fill=red!10, minimum width=2.8cm] (out) at (12.15,1.0) {new missing block\\$\bm{x}_{j,m}^{\star}$};
 
     \draw[arrow] (c1) -- (mix);
     \draw[arrow] (c2) -- (mix);
     \draw[arrow] (c3) -- (mix);
-    \draw[arrow, ultra thick] (mix) -- (out);
+    \draw[arrow, ultra thick] (mix.east) -- (out.west);
 
     \node[align=center, font=\bfseries, text=techBlue] at (7.0,3.2) {responsibility-weighted fusion};
-    \node[align=center, font=\bfseries, text=alertRed] at (11.5,2.5) {cluster-consistent completion};
+    \node[align=center, font=\bfseries, text=alertRed] at (12.1,2.5) {cluster-consistent completion};
 \end{tikzpicture}
