@@ -10,3 +10,9 @@ data/
 .gmm_venv/
 venv/
 env/
+.venv/
+
+# Manim-generated files
+media/
+_tex/
+.manim/
