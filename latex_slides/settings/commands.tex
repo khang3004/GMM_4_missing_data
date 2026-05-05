@@ -12,6 +12,17 @@
 % Effect: Bold and TechBlue color
 \newcommand{\highlight}[1]{\textbf{\textcolor{techBlue}{#1}}}
 
+% --- Math aliases shared with the report ---
+\DeclareMathOperator*{\argmax}{arg\,max}
+\renewcommand{\vect}[1]{\bm{#1}}
+\providecommand{\mat}[1]{\mathbf{#1}}
+\providecommand{\scal}[1]{#1}
+\providecommand{\trans}{^\top}
+\providecommand{\inv}{^{-1}}
+\renewcommand{\R}{\mathbb{R}}
+\providecommand{\N}{\mathcal{N}}
+\providecommand{\given}{\,\middle|\,}
+
 % --- Decorator: Todo Marker ---
 % Usage: \todo{Fix this figure}
 % Effect: Visible red marker for dev phase

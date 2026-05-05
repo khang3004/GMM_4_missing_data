@@ -1,26 +1,70 @@
 \section{Formulation}
 
+\begin{frame}[shrink=6]{Notation Before the Equations}
+    \small
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.47\textwidth}
+            \begin{beamercolorbox}[sep=0.75em, rounded=true, shadow=true]{block title}
+                \textbf{Data with missing coordinates}
+            \end{beamercolorbox}
+            \vspace{0.08cm}
+            \[
+                \mat{X}\in\R^{\scal{n}\times \scal{d}},\qquad
+                \vect{x}_j\in\R^{\scal{d}},\qquad
+                \vect{x}_j=
+                \begin{bmatrix}
+                    \vect{x}_{j,o}\\
+                    \vect{x}_{j,m}
+                \end{bmatrix}
+            \]
+            \begin{itemize}
+                \item \(\mathcal{O}_j\): observed feature indices
+                \item \(\mathcal{M}_j\): missing feature indices
+                \item \(\vect{x}_{j,o}\) is locked by observation
+                \item \(\vect{x}_{j,m}\) is optimized by the algorithm
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            \begin{beamercolorbox}[sep=0.75em, rounded=true, shadow=true]{block title}
+                \textbf{GMM quantities}
+            \end{beamercolorbox}
+            \vspace{0.08cm}
+            \renewcommand{\arraystretch}{1.28}
+            \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}X@{}}
+                \(\scal{K}\) & number of Gaussian components \\
+                \(\scal{\alpha}_k\) & mixture weight of component \(\scal{k}\) \\
+                \(\vect{\mu}_k\) & component mean vector \\
+                \(\mat{\Sigma}_k\) & component covariance matrix \\
+                \(\mat{\Lambda}_k=\mat{\Sigma}_k\inv\) & component precision matrix \\
+                \(\scal{\gamma}_{jk}\) & posterior responsibility for sample \(\scal{j}\) \\
+                \(\scal{P}_{jk}\) & unnormalized component score \\
+                \(\vect{\mu}_{k,o},\mat{\Lambda}_{k,mm}\) & observed/missing blocks induced by \(\mathcal{O}_j,\mathcal{M}_j\)
+            \end{tabularx}
+        \end{column}
+    \end{columns}
+\end{frame}
+
 \begin{frame}[shrink=3]{Joint Optimization View}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.58\textwidth}
             \[
-                \max_{X,\{\alpha_k,\mu_k,\Sigma_k\}_{k=1}^{K}}
-                \sum_{j=1}^{n}
+                \max_{\mat{X},\{\scal{\alpha}_k,\vect{\mu}_k,\mat{\Sigma}_k\}_{k=1}^{\scal{K}}}
+                \sum_{j=1}^{\scal{n}}
                 \log\Bigg(
-                \sum_{k=1}^{K}\alpha_k \,
-                \mathcal{N}(x_j \mid \mu_k, \Sigma_k)
+                \sum_{k=1}^{\scal{K}}\scal{\alpha}_k \,
+                \N(\vect{x}_j \mid \vect{\mu}_k, \mat{\Sigma}_k)
                 \Bigg)
             \]
 
             \[
-                \text{s.t. } x_{j,o}=x_{j,o}^{\mathrm{obs}},\qquad
-                x_j=\begin{bmatrix}x_{j,o}\\x_{j,m}\end{bmatrix}
+                \text{s.t. } \vect{x}_{j,o}=\vect{x}_{j,o}^{\mathrm{obs}},\qquad
+                \vect{x}_j=\begin{bmatrix}\vect{x}_{j,o}\\\vect{x}_{j,m}\end{bmatrix}
             \]
 
             \vspace{0.25cm}
             \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block body}
                 \large
-                \textbf{The optimization variable is the completed matrix \(X\),}\\
+                \textbf{The optimization variable is the completed matrix \(\mat{X}\),}\\
                 not only the GMM parameters.
             \end{beamercolorbox}
         \end{column}
@@ -30,8 +74,8 @@
             \end{beamercolorbox}
             \vspace{0.15cm}
             \begin{itemize}
-                \item \(\gamma_{jk}\): cluster uncertainty
-                \item \(x_{j,m}\): feature uncertainty
+                \item \(\scal{\gamma}_{jk}\): cluster uncertainty
+                \item \(\vect{x}_{j,m}\): feature uncertainty
             \end{itemize}
 
             \vspace{0.25cm}
@@ -44,58 +88,67 @@
 \end{frame}
 
 
-\begin{frame}[shrink=10]{The Three Equations That Matter}
-    \small
+\begin{frame}[shrink=7]{The Three Equations That Matter}
+    \scriptsize
+    \setlength{\abovedisplayskip}{0.35em}
+    \setlength{\belowdisplayskip}{0.35em}
     \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.32\textwidth}
-            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+        \begin{column}{0.31\textwidth}
+            \begin{beamercolorbox}[sep=0.65em, rounded=true, shadow=true]{block title}
                 \textbf{E-step}
             \end{beamercolorbox}
             \[
-                \gamma_{jk}=
-                \frac{\alpha_k\mathcal{N}(x_j\mid \mu_k,\Sigma_k)}
-                {\sum_{\ell=1}^{K}\alpha_{\ell}\mathcal{N}(x_j\mid \mu_{\ell},\Sigma_{\ell})}
+                \scal{\gamma}_{jk}=
+                \frac{\scal{\alpha}_k\N(\vect{x}_j\mid \vect{\mu}_k,\mat{\Sigma}_k)}
+                {\sum_{\ell=1}^{\scal{K}}\scal{\alpha}_{\ell}\N(\vect{x}_j\mid \vect{\mu}_{\ell},\mat{\Sigma}_{\ell})}
             \]
             \vspace{0.1cm}
             \centering
-            \small soft cluster membership
+            \footnotesize soft cluster membership
         \end{column}
-        \begin{column}{0.32\textwidth}
-            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+        \begin{column}{0.31\textwidth}
+            \begin{beamercolorbox}[sep=0.65em, rounded=true, shadow=true]{block title}
                 \textbf{M-step params}
             \end{beamercolorbox}
             \[
-                N_k=\sum_{j=1}^{n}\gamma_{jk},\qquad
-                \alpha_k=\frac{N_k}{n}
+                \scal{N}_k=\sum_{j=1}^{\scal{n}}\scal{\gamma}_{jk},\qquad
+                \scal{\alpha}_k=\frac{\scal{N}_k}{\scal{n}}
             \]
             \[
-                \mu_k=\frac{1}{N_k}\sum_{j=1}^{n}\gamma_{jk}x_j
+                \vect{\mu}_k=\frac{1}{\scal{N}_k}\sum_{j=1}^{\scal{n}}\scal{\gamma}_{jk}\vect{x}_j
             \]
             \[
-                \Sigma_k=\frac{1}{N_k}\sum_{j=1}^{n}\gamma_{jk}(x_j-\mu_k)(x_j-\mu_k)^\top
+                \resizebox{0.98\linewidth}{!}{$
+                    \mat{\Sigma}_k=\frac{1}{\scal{N}_k}\sum_{j=1}^{\scal{n}}\scal{\gamma}_{jk}(\vect{x}_j-\vect{\mu}_k)(\vect{x}_j-\vect{\mu}_k)^\top
+                $}
             \]
         \end{column}
-        \begin{column}{0.32\textwidth}
-            \begin{beamercolorbox}[sep=0.8em, rounded=true, shadow=true]{block title}
+        \begin{column}{0.31\textwidth}
+            \begin{beamercolorbox}[sep=0.65em, rounded=true, shadow=true]{block title}
                 \textbf{M-step data}
             \end{beamercolorbox}
             \[
+                \vect{x}_{j,m}^{\star}=\mat{A}_j^{-1}\vect{b}_j
+            \]
+            \[
             \begin{aligned}
-                x_{j,m}^{\star}
+                \mat{A}_j
                 &=
-                \left(\sum_{k=1}^{K}P_{jk}\Lambda_{k,mm}\right)^{-1} \\
-                &\quad \cdot
-                \sum_{k=1}^{K}
-                P_{jk}
+                \sum_{k=1}^{\scal{K}}\scal{P}_{jk}\mat{\Lambda}_{k,mm}\\
+                \vect{b}_j
+                &=
+                \sum_{k=1}^{\scal{K}}
+                \scal{P}_{jk}
                 \Big(
-                \Lambda_{k,mo}\mu_{k,o}
-                +\Lambda_{k,mm}\mu_{k,m}
-                -\Lambda_{k,mo}x_{j,o}
+                \mat{\Lambda}_{k,mo}\vect{\mu}_{k,o}
+                +\mat{\Lambda}_{k,mm}\vect{\mu}_{k,m}\\
+                &\hspace{3.2em}
+                -\mat{\Lambda}_{k,mo}\vect{x}_{j,o}
                 \Big)
             \end{aligned}
             \]
             \centering
-            \small precision-weighted conditional reconstruction
+            \footnotesize precision-weighted\\conditional reconstruction
         \end{column}
     \end{columns}
 \end{frame}

@@ -12,7 +12,7 @@
                 \begin{itemize}
                     \item every block update pushes the objective upward
                     \item EM handles soft assignments
-                    \item closed-form \(x_{j,m}\) update refreshes the surrogate data matrix
+                    \item closed-form \(\vect{x}_{j,m}\) update refreshes the surrogate data matrix
                 \end{itemize}
             \end{beamercolorbox}
 
@@ -28,18 +28,20 @@
 
 \begin{frame}[shrink=5]{Why the Missing-Data Update Is the Real Star}
     \begin{center}
-        {\large
-        Each Gaussian component proposes a local completion.}\\[0.2cm]
-        {\large
+        {\normalsize
+        Each Gaussian component proposes a local completion.}\\[0.08cm]
+        {\normalsize
         Responsibilities decide how much each proposal matters.}
     \end{center}
 
-    \vspace{0.35cm}
-    \input{figures/tikz/precision_update_story.tikz}
+    \vspace{0.08cm}
+    {\centering
+        \input{figures/tikz/precision_update_story.tikz}\par
+    }
 
-    \vspace{0.15cm}
+    \vspace{0.05cm}
     \begin{center}
-        \large
+        \normalsize
         \textcolor{alertRed}{Not a generic imputer.}
         It is a \textbf{cluster-aware geometric reconstruction}.
     \end{center}

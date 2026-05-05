@@ -1,28 +1,35 @@
 \begin{tikzpicture}[
-    scale=0.92,
+    scale=0.9,
     transform shape,
-    node distance=0.45cm and 0.65cm,
-    comp/.style={rounded corners=8pt, draw=black!70, line width=0.9pt, minimum width=3.2cm, minimum height=1.0cm, align=center, font=\small, inner sep=6pt},
-    arrow/.style={-{Latex[length=3mm]}, line width=1.1pt}
+    comp/.style={rounded corners=7pt, draw=black!70, line width=0.9pt, minimum width=2.95cm, minimum height=0.82cm, align=center, font=\scriptsize, inner sep=5pt},
+    agg/.style={rounded corners=7pt, draw=black!70, line width=0.95pt, fill=gray!8, minimum width=4.75cm, minimum height=3.05cm, align=center, font=\scriptsize, inner sep=8pt},
+    outbox/.style={rounded corners=7pt, draw=black!70, line width=0.95pt, fill=red!10, minimum width=2.55cm, minimum height=0.9cm, align=center, font=\scriptsize, inner sep=5pt},
+    arrow/.style={-{Latex[length=3mm]}, line width=1.05pt},
+    title/.style={align=center, font=\bfseries\small, text=techBlue}
 ]
-    \node[comp, fill=blue!12] (c1) at (1.8,2.5) {component 1\\$\mu_1,\Lambda_1,\gamma_{j1}$};
-    \node[comp, fill=green!13] (c2) at (1.8,1.0) {component 2\\$\mu_2,\Lambda_2,\gamma_{j2}$};
-    \node[comp, fill=orange!18] (c3) at (1.8,-0.5) {component $K$\\$\mu_K,\Lambda_K,\gamma_{jK}$};
+    \node[title] at (1.45,3.08) {component-wise\\local geometry};
+    \node[comp, fill=blue!12] (c1) at (1.45,2.1) {component 1\\$\vect{\mu}_1,\mat{\Lambda}_1,\scal{P}_{j1}$};
+    \node[comp, fill=green!13] (c2) at (1.45,1.02) {component 2\\$\vect{\mu}_2,\mat{\Lambda}_2,\scal{P}_{j2}$};
+    \node[font=\Large, text=black!60] (dots) at (1.45,0.25) {$\vdots$};
+    \node[comp, fill=orange!18] (cK) at (1.45,-0.65) {component $\scal{K}$\\$\vect{\mu}_{K},\mat{\Lambda}_{K},\scal{P}_{jK}$};
 
-    \node[comp, fill=gray!10, minimum width=3.4cm, minimum height=3.6cm] (mix) at (7.0,1.0) {solve one linear system\\[0.2em]
-    $\displaystyle
-    \left(\sum_k P_{jk}\Lambda_{k,mm}\right)x_{j,m}
-    =
-    \sum_k P_{jk}b_{jk}
-    $};
+    \node[agg] (mix) at (6.5,0.75) {
+        \textbf{aggregate the proposals}\\[0.25em]
+        $\displaystyle \vect{x}_{j,m}^{\star}=\mat{A}_j^{-1}\vect{b}_j$\\[0.2em]
+        $\displaystyle \mat{A}_j=\sum_{k=1}^{\scal{K}}\scal{P}_{jk}\mat{\Lambda}_{k,mm}$\\[0.2em]
+        $\displaystyle \vect{b}_j=\sum_{k=1}^{\scal{K}}\scal{P}_{jk}\vect{r}_{jk}$\\[0.2em]
+        $\displaystyle \vect{r}_{jk}=
+        \mat{\Lambda}_{k,mo}(\vect{\mu}_{k,o}-\vect{x}_{j,o})
+        +\mat{\Lambda}_{k,mm}\vect{\mu}_{k,m}$
+    };
 
-    \node[comp, fill=red!10, minimum width=2.8cm] (out) at (12.15,1.0) {new missing block\\$\bm{x}_{j,m}^{\star}$};
+    \node[outbox] (out) at (11.35,0.75) {new missing block\\$\vect{x}_{j,m}^{\star}$};
 
-    \draw[arrow] (c1) -- (mix);
-    \draw[arrow] (c2) -- (mix);
-    \draw[arrow] (c3) -- (mix);
+    \draw[arrow] (c1.east) -- ([yshift=0.86cm]mix.west);
+    \draw[arrow] (c2.east) -- (mix.west);
+    \draw[arrow] (cK.east) -- ([yshift=-0.86cm]mix.west);
     \draw[arrow, ultra thick] (mix.east) -- (out.west);
 
-    \node[align=center, font=\bfseries, text=techBlue] at (7.0,3.2) {responsibility-weighted fusion};
-    \node[align=center, font=\bfseries, text=alertRed] at (12.1,2.5) {cluster-consistent completion};
+    \node[title] at (6.5,2.92) {responsibility-weighted fusion};
+    \node[align=center, font=\bfseries\small, text=alertRed] at (11.35,1.86) {cluster-consistent\\completion};
 \end{tikzpicture}

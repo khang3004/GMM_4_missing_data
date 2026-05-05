@@ -15,10 +15,10 @@
 
     \node[font=\Large\bfseries] at (13.2,3.3) {One-stage};
     \node[box, fill=gray!10, minimum width=2.8cm] (b1) at (12.7,2.2) {Incomplete\\data};
-    \node[box, fill=blue!12, minimum width=3.5cm, right=1.55cm of b1] (b2) {GMM parameters\\$\alpha_k,\mu_k,\Sigma_k$};
-    \node[box, fill=red!10, minimum width=3.4cm, below=1.45cm of b2] (b3) {Missing entries\\$x_{j,m}$};
+    \node[box, fill=blue!12, minimum width=3.5cm, right=1.55cm of b1] (b2) {GMM parameters\\$\scal{\alpha}_k,\vect{\mu}_k,\mat{\Sigma}_k$};
+    \node[box, fill=red!10, minimum width=3.4cm, below=1.45cm of b2] (b3) {Missing entries\\$\vect{x}_{j,m}$};
     \draw[arrow] (b1) -- (b2);
     \draw[arrow] (b2) -- (b3);
-    \draw[arrow] ([xshift=0.15cm]b3.east) -- ++(0.95,0) |- ([xshift=0.35cm]b2.south);
+    \draw[arrow] ([xshift=0.15cm]b3.east) -- ++(0.9,0) |- ([yshift=-0.02cm]b2.east);
     \node[align=center, text=techBlue, font=\bfseries\small] at (13.35,0.8) {imputation and clustering\\improve each other};
 \end{tikzpicture}

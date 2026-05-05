@@ -35,9 +35,9 @@
     \begin{tabular}{>{\bfseries}p{0.2\textwidth} p{0.33\textwidth} p{0.38\textwidth}}
         Equation block & Meaning & In code \\
         \toprule
-        \(\gamma_{jk}\) & posterior responsibilities & \texttt{\_e\_step()} with log-domain Gaussian scores \\
-        \(\alpha_k,\mu_k,\Sigma_k\) & standard GMM M-step & \texttt{\_m\_step\_params()} \\
-        \(x_{j,m}^{\star}\) & precision-weighted update for missing entries & \texttt{\_m\_step\_data()} \\
+        \(\scal{\gamma}_{jk}\) & posterior responsibilities & \texttt{\_e\_step()} with log-domain Gaussian scores \\
+        \(\scal{\alpha}_k,\vect{\mu}_k,\mat{\Sigma}_k\) & standard GMM M-step & \texttt{\_m\_step\_params()} \\
+        \(\vect{x}_{j,m}^{\star}\) & precision-weighted update for missing entries & \texttt{\_m\_step\_data()} \\
         fit loop & alternating ascent until tolerance & \texttt{fit()} / \texttt{fit\_scale()} \\
         \bottomrule
     \end{tabular}
